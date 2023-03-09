@@ -4,13 +4,23 @@ Work in progress.
 
 ## Status
 
+### End-to-End suite tests
+
+#### API
 [![E2E API Test](https://github.com/konveyor/go-konveyor-tests/actions/workflows/e2e-api-test.yml/badge.svg?branch=main)](https://github.com/konveyor/go-konveyor-tests/actions/workflows/e2e-api-test.yml)
 
+
+#### UI
 [![E2E UI Test](https://github.com/konveyor/tackle-ui-tests/actions/workflows/k8s-cron.yml/badge.svg?branch=main)](https://github.com/konveyor/tackle-ui-tests/actions/workflows/k8s-cron.yml)
 
-### Components
+### Components integration tests
 
+#### Windup Addon
 [![Test Windup Addon](https://github.com/konveyor/tackle2-addon-windup/actions/workflows/test-windup.yml/badge.svg?branch=main)](https://github.com/konveyor/tackle2-addon-windup/actions/workflows/test-windup.yml)
+
+
+#### Hub
+```TODO```
 
 Add more components (like Hub) with their unit/integration tests execution status.
 
