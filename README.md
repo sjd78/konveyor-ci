@@ -20,6 +20,9 @@ Work in progress.
 
 
 #### Hub
+[![Test Addons](https://github.com/konveyor/tackle2-hub/actions/workflows/test-addons.yml/badge.svg?branch=main)](https://github.com/konveyor/tackle2-hub/actions/workflows/test-addons.yml)
+(uses test from Windup addon, just executed on Hub push)
+
 ```TODO```
 
 Add more components (like Hub) with their unit/integration tests execution status.
