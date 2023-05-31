@@ -1,0 +1,7 @@
+name: Konveyor CI
+
+on: ["push", "pull_request"]
+
+jobs:
+  ci:
+    uses: ./.github/workflows/global-ci.yml
