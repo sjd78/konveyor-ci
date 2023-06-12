@@ -1,0 +1,14 @@
+name: Run Konveyor nightly main branch tests
+
+on:
+  schedule:
+    - cron: "5 3 * * *"
+  workflow_dispatch:
+
+jobs:
+  main-nightly:
+    uses: ./.github/workflows/global-ci.yml
+    with:
+      tag: latest
+      api_tests_ref: main
+      ui_tests_ref: main
