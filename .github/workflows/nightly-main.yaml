@@ -12,3 +12,4 @@ jobs:
       tag: latest
       api_tests_ref: main
       ui_tests_ref: main
+      run_ui_tests: true

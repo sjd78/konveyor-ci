@@ -29,7 +29,8 @@ on:
           A flag that determines whether the UI tests should be run or not
         type: boolean
         required: false
-        default: true
+        # TODO: Swap to true once these are passing consistently
+        default: false
       api_tests_ref:
         description: |
           The branch or PR of the go-konveyor-tests repository to clone.
@@ -82,7 +83,8 @@ on:
           A flag that determines whether the UI tests should be run or not
         type: boolean
         required: false
-        default: true
+        # TODO: Swap to true once these are passing consistently
+        default: false
       api_tests_ref:
         description: |
           The branch or PR of the go-konveyor-tests repository to clone.
@@ -178,8 +180,7 @@ jobs:
         working-directory: go-konveyor-tests
 
   e2e-ui-integration-tests:
-    # TODO once these are passing consistently within about an hour reenable for PRs
-    if: ${{ github.event_name != 'pull_request' && inputs.run_ui_tests }}
+    if: ${{ inputs.run_ui_tests }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
