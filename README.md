@@ -21,5 +21,87 @@ Branch | Status
 **release-0.2** | [![Run Konveyor release-0.2 nightly tests](https://github.com/konveyor/ci/actions/workflows/nightly-release-0.2.yaml/badge.svg?branch=main)](https://github.com/konveyor/ci/actions/workflows/nightly-release-0.2.yaml)
 **release-0.1** | [![Run Konveyor release-0.1 nightly tests](https://github.com/konveyor/ci/actions/workflows/nightly-release-0.1.yaml/badge.svg?branch=main)](https://github.com/konveyor/ci/actions/workflows/nightly-release-0.1.yaml)
 
+
+## Using the global-ci github workflow
+
+This repository is home to the [global-ci github workflow](https://github.com/konveyor/ci/tree/main/.github/workflows/global-ci.yml).
+
+To use this workflow in your repository, simply add a job that references it as follows:
+
+```yaml
+jobs:
+  main-nightly:
+    uses: konveyor/ci/.github/workflows/global-ci.yml@main
+```
+
+If you would like to test it while swapping out a specific component, you can build that component's docker image, upload an artifact
+containing the image as a tar file, and reference the artifact when calling the global workflow. Below is an example, swapping out the
+`analyzer-lsp` component:
+
+
+```yaml
+jobs:
+  build-component:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: build and save image
+        run: |
+          podman build -t quay.io/konveyor/analyzer-lsp:latest .
+          podman save -o /tmp/analyzer-lsp.tar quay.io/konveyor/analyzer-lsp:latest
+
+      - name: Upload image as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: analyzer-lsp
+          path: /tmp/analyzer-lsp.tar
+          # This prevents too many artifacts from accumulating in your repository
+          retention-days: 1
+
+  e2e:
+    # This references the job that uploads the artifact, to ensure it exists before the job is run
+    needs: build-component
+    uses: konveyor/ci/.github/workflows/global-ci.yml@main
+    with:
+      component_name: analyzer-lsp
+```
+
+### Referencing specific references of the test repositories
+
+The `global-ci` workflow supports the `api_tests_ref` and `ui_tests_ref` parameters (both default to `main`). This allows you to reference a specific commit of the tests. For example, to configure a release-0.1 nightly, referencing appropriate versions of the test repositories for the release, your job would look something like this:
+
+```yaml
+jobs:
+  release-0_1-nightly:
+    uses: konveyor/ci/.github/workflows/global-ci.yml@main
+    with:
+      tag: release-0.1
+      api_tests_ref: 95c17ea090d50c0c623aa7d43168f6ca8fe26a88
+      ui_tests_ref: mta_6.1.1
+```
+
+#### Referencing specific pull requests in the test repositories
+
+For repositories that are testing a subbed out component, it's possible that changes need to be made to the test repositories as well as the core component. In these cases, it is possible to change the reference for the test repositories by simply reference them in your Pull Request description.
+
+To replace the `e2e-api-integration-tests` reference, add the following string to your PR description:
+
+```
+API tests PR: 233
+```
+
+replacing `233` with the appropriate [konveyor/go-konveyor-tests](https://github.com/konveyor/go-konveyor-tests) pull request number for your tests.
+
+
+To replace the `e2e-ui-integration-tests` reference, add the following string to your PR description:
+
+```
+UI tests PR: 233
+```
+
+replacing `233` with the appropriate [konveyor/tackle-ui-tests](https://github.com/konveyor/tackle-ui-tests) pull request number for your tests.
+
+
 ## Code of Conduct
 Refer to Konveyor's Code of Conduct [here](https://github.com/konveyor/community/blob/main/CODE_OF_CONDUCT.md).
