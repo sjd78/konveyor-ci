@@ -11,6 +11,7 @@ jobs:
     with:
       tag: release-0.1
       api_tests_ref: 95c17ea090d50c0c623aa7d43168f6ca8fe26a88
+      run_api_tests: true
       ui_tests_ref: mta_6.1.1
       # Disabled while we wait for stability
       run_ui_tests: false
