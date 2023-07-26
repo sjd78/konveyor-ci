@@ -11,6 +11,7 @@ jobs:
     with:
       tag: latest
       api_tests_ref: main
+      run_api_tests: true
       ui_tests_ref: main
       # Disabled while we wait for stability
       run_ui_tests: false

@@ -23,7 +23,7 @@ on:
           A flag that determines whether the API tests should be run or not
         type: boolean
         required: false
-        default: true
+        default: false
       run_ui_tests:
         description: |
           A flag that determines whether the UI tests should be run or not
@@ -77,7 +77,7 @@ on:
           A flag that determines whether the API tests should be run or not
         type: boolean
         required: false
-        default: true
+        default: false
       run_ui_tests:
         description: |
           A flag that determines whether the UI tests should be run or not

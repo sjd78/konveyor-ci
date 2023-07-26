@@ -11,6 +11,7 @@ jobs:
     with:
       tag: release-0.2
       api_tests_ref: 95c17ea090d50c0c623aa7d43168f6ca8fe26a88
+      run_api_tests: true
       # TODO: this needs to be pinned to a release-0.2 specific branch
       ui_tests_ref: main
       # Disabled while we wait for stability
