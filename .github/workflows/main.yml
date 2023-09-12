@@ -1,0 +1,14 @@
+name: Run Konveyor main branch tests
+
+on: ["push", "pull_request"]
+
+jobs:
+  main:
+    uses: ./.github/workflows/global-ci.yml
+    with:
+      tag: latest
+      api_tests_ref: main
+      run_api_tests: true
+      ui_tests_ref: main
+      # Disabled while we wait for stability
+      run_ui_tests: false
