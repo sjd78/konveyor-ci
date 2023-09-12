@@ -176,7 +176,7 @@ jobs:
       - name: Build and run golang API tests
         run: |
           export HUB_BASE_URL="http://$(minikube ip)/hub"
-          go test -v ./analysis/...
+          make test-tier0
         working-directory: go-konveyor-tests
 
   e2e-ui-integration-tests:
