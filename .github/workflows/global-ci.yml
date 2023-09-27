@@ -159,26 +159,30 @@ jobs:
       - name: install konveyor
         uses: konveyor/tackle2-operator/.github/actions/install-tackle@main
         with:
-          # TODO need to set the tackle-operator image once supported
-          # tackle-operator-image: quay.io/konveyor/tackle2-operator:${{ inputs.tag }}
-          tackle-hub-image: "quay.io/konveyor/tackle2-hub:${{ inputs.tag }}"
-          tackle-pathfinder-image: "quay.io/konveyor/tackle-pathfinder:${{ inputs.tag != 'latest' && inputs.tag || '1.3.0-native' }}"
-          tackle-ui-image: "quay.io/konveyor/tackle2-ui:${{ inputs.tag }}"
-          tackle-addon-admin-image: "quay.io/konveyor/tackle2-addon:${{ inputs.tag }}"
-          tackle-addon-windup-image: "quay.io/konveyor/tackle2-addon-windup:${{ inputs.tag }}"
-          tackle-image-pull-policy: IfNotPresent
-          tackle-windup-container-memory: 0
-          tackle-windup-container-cpu: 0
+          operator-bundle-image: "quay.io/konveyor/tackle2-operator-bundle:${{ inputs.tag }}"
+          hub-image: "quay.io/konveyor/tackle2-hub:${{ inputs.tag }}"
+          pathfinder-image: "quay.io/konveyor/tackle-pathfinder:${{ inputs.tag != 'latest' && inputs.tag || '1.3.0-native' }}"
+          ui-image: "quay.io/konveyor/tackle2-ui:${{ inputs.tag }}"
+          addon-admin-image: "quay.io/konveyor/tackle2-addon:${{ inputs.tag }}"
+          addon-analyzer-image: "quay.io/konveyor/tackle2-addon-analyzer:${{ inputs.tag }}"
+          image-pull-policy: IfNotPresent
+          analyzer-container-memory: 0
+          analyzer-container-cpu: 0
       # end DRY
 
       - uses: actions/setup-go@v4
         with:
           go-version: 1.18
 
+      - name: Install test dependencies
+        run: |
+          go install github.com/onsi/ginkgo/v2/ginkgo
+        working-directory: go-konveyor-tests
+
       - name: Build and run golang API tests
         run: |
           export HUB_BASE_URL="http://$(minikube ip)/hub"
-          make test-tier0
+          make test-tier0 test-tier1
         working-directory: go-konveyor-tests
 
   e2e-ui-integration-tests:
