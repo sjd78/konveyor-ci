@@ -1,0 +1,18 @@
+name: Run Konveyor release-0.3 nightly tests
+
+on:
+  schedule:
+    - cron: "35 3 * * *"
+  workflow_dispatch:
+
+jobs:
+  release-0_3-nightly:
+    uses: ./.github/workflows/global-ci.yml
+    with:
+      tag: release-0.3
+      api_tests_ref: release-0.3
+      run_api_tests: true
+      # TODO: this needs to be pinned to a release-0.3 specific branch
+      ui_tests_ref: main
+      # Disabled while we wait for stability
+      run_ui_tests: false
