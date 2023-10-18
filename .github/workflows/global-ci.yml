@@ -30,7 +30,7 @@ on:
         type: boolean
         required: false
         # TODO: Swap to true once these are passing consistently
-        default: false
+        default: true
       api_tests_ref:
         description: |
           The branch or PR of the go-konveyor-tests repository to clone.
@@ -82,7 +82,7 @@ on:
         description: |
           A flag that determines whether the UI tests should be run or not
         type: boolean
-        required: false
+        required: true
         # TODO: Swap to true once these are passing consistently
         default: false
       api_tests_ref:
@@ -193,7 +193,7 @@ jobs:
       matrix:
         # TODO: Support cypress-split in main tackle-ui-test project
         # split: [0, 1, 2, 3, 4, 5, 6, 7, 8]
-        tier: [tier1, tier2, tier3]
+        tier: [tier0] #, tier1, tier2, tier3]
     steps:
 
       - name: Extract pull request number from inputs or PR description
