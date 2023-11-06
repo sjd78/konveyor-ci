@@ -1,0 +1,395 @@
+name: Konveyor CI via Operator Bundle
+
+on:
+  workflow_call:
+    inputs:
+      artifact:
+        description: |
+          The name of the artifact storing custom images to be used during the CI run. All
+          images stored in the artifact will be automatically loaded.
+        type: string
+        required: false
+      operator:
+        description: image uri for operator (ie. quay.io/<namespace>/<image-name>:<tag>). Must be pullable.
+        type: string
+        required: false
+        default: ""
+      oauth_proxy:
+        description: image uri for oauth_proxy (ie. quay.io/<namespace>/<image-name>:<tag>)
+        type: string
+        required: false
+        default: ""
+      tackle_hub:
+        description: image uri for tackle-hub (ie. quay.io/<namespace>/<image-name>:<tag>)
+        type: string
+        required: false
+        default: ""
+      tackle_postgres:
+        description: image uri for tackle-postgres (ie. quay.io/<namespace>/<image-name>:<tag>)
+        type: string
+        required: false
+        default: ""
+      keycloak_sso:
+        description: image uri for keycloak_sso image (ie. quay.io/<namespace>/<image-name>:<tag>)
+        type: string
+        required: false
+        default: ""
+      keycloak_init:
+        description: image uri for keycloak_init image (ie. quay.io/<namespace>/<image-name>:<tag>)
+        type: string
+        required: false
+        default: ""
+      tackle_ui:
+        description: image uri for tackle-ui (ie. quay.io/<namespace>/<image-name>:<tag>)
+        type: string
+        required: false
+        default: ""
+      addon_admin:
+        description: image uri for admin addon (ie. quay.io/<namespace>/<image-name>:<tag>)
+        type: string
+        required: false
+        default: ""
+      addon_analyzer:
+        description: image uri for analyzer addon (ie. quay.io/<namespace>/<image-name>:<tag>)
+        type: string
+        required: false
+        default: ""
+      namespace:
+        description: |
+          Namespace for the konveyor install.
+        type: string
+        required: false
+        default: ""
+      tackle_cr:
+        description: |
+          Full JSON encoded string representing the Tackle resource to be created.
+        type: string
+        required: false
+        default: '{"kind":"Tackle","apiVersion":"tackle.konveyor.io/v1alpha1","metadata":{"name":"tackle"},"spec":{"image_pull_policy":"IfNotPresent","analyzer_container_memory":0,"analyzer_container_cpu":0,"feature_auth_required":false}}'
+      run_api_tests:
+        description: |
+          A flag that determines whether the API tests should be run or not
+        type: boolean
+        required: false
+        default: true
+      run_ui_tests:
+        description: |
+          A flag that determines whether the UI tests should be run or not
+        type: boolean
+        required: false
+        # TODO: Swap to true once these are passing consistently
+        default: false
+      api_tests_ref:
+        description: |
+          The branch or PR of the go-konveyor-tests repository to clone.
+          For a pull request, the reference format would be "refs/pull/${PR_NUMBER}/merge".
+          For a branch, the reference format would just be the branch name.
+          This input can be set automatically on a pull request by adding a string of the format:
+            Go tests PR: 140
+          replacing "140" with the appropriate PR number. This will make it easier to coordinate changes
+          that require updating the global tests as well.
+        required: false
+        type: string
+        default: main
+      ui_tests_ref:
+        description: |
+          The branch or PR of the tackle-ui-tests repository to clone.
+          For a pull request, the reference format would be "refs/pull/${PR_NUMBER}/merge".
+          For a branch, the reference format would just be the branch name.
+          This input can be set automatically on a pull request by adding a string of the format:
+            UI tests PR: 140
+          replacing "140" with the appropriate PR number. This will make it easier to coordinate changes
+          that require updating the global tests as well.
+        required: false
+        type: string
+        default: main
+  workflow_dispatch:
+    inputs:
+      operator:
+        description: image uri for operator (ie. quay.io/<namespace>/<image-name>:<tag>). Must be pullable.
+        type: string
+        required: false
+        default: ""
+      tackle_hub:
+        description: image uri for tackle-hub (ie. quay.io/<namespace>/<image-name>:<tag>)
+        type: string
+        required: false
+        default: ""
+      tackle_ui:
+        description: image uri for tackle-ui (ie. quay.io/<namespace>/<image-name>:<tag>)
+        type: string
+        required: false
+        default: ""
+      addon_admin:
+        description: image uri for admin addon (ie. quay.io/<namespace>/<image-name>:<tag>)
+        type: string
+        required: false
+        default: ""
+      addon_analyzer:
+        description: image uri for analyzer addon (ie. quay.io/<namespace>/<image-name>:<tag>)
+        type: string
+        required: false
+        default: ""
+      tackle_cr:
+        description: |
+          Full JSON encoded string representing the Tackle resource to be created.
+        type: string
+        required: false
+        default: '{"kind":"Tackle","apiVersion":"tackle.konveyor.io/v1alpha1","metadata":{"name":"tackle"},"spec":{"image_pull_policy":"IfNotPresent","analyzer_container_memory":0,"analyzer_container_cpu":0,"feature_auth_required":false}}'
+      run_api_tests:
+        description: |
+          A flag that determines whether the API tests should be run or not
+        type: boolean
+        required: false
+        default: true
+      run_ui_tests:
+        description: |
+          A flag that determines whether the UI tests should be run or not
+        type: boolean
+        required: false
+        # TODO: Swap to true once these are passing consistently
+        default: false
+      api_tests_ref:
+        description: |
+          The branch or PR of the go-konveyor-tests repository to clone.
+          For a pull request, the reference format would be "refs/pull/${PR_NUMBER}/merge".
+          For a branch, the reference format would just be the branch name.
+          This input can be set automatically on a pull request by adding a string of the format:
+            Go tests PR: 140
+          replacing "140" with the appropriate PR number. This will make it easier to coordinate changes
+          that require updating the global tests as well.
+        required: false
+        type: string
+        default: main
+      ui_tests_ref:
+        description: |
+          The branch or PR of the tackle-ui-tests repository to clone.
+          For a pull request, the reference format would be "refs/pull/${PR_NUMBER}/merge".
+          For a branch, the reference format would just be the branch name.
+          This input can be set automatically on a pull request by adding a string of the format:
+            UI tests PR: 140
+          replacing "140" with the appropriate PR number. This will make it easier to coordinate changes
+          that require updating the global tests as well.
+        required: false
+        type: string
+        default: main
+
+env:
+  operator_bundle: ttl.sh/konveyor-operator-bundle-${{ github.sha }}:2h
+
+jobs:
+  e2e-api-integration-tests:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.run_api_tests }}
+    steps:
+      - name: Extract pull request number from inputs or PR description
+        run: |
+          PULL_REQUEST_NUMBER=$(echo "${{ github.event.pull_request.body }}" | grep -oP '[A|a][P|p][I|i] [T|t]ests [P|p][R|r]: \K\d+' || true)
+          if [ -z "$PULL_REQUEST_NUMBER" ]; then
+            echo "GOLANG_TESTS_REF=${{ inputs.api_tests_ref }}" >>$GITHUB_ENV
+          else
+            echo "GOLANG_TESTS_REF=refs/pull/$PULL_REQUEST_NUMBER/merge" >>$GITHUB_ENV
+          fi
+
+      - name: Checkout golang api tests repo
+        uses: actions/checkout@v3
+        with:
+          repository: konveyor/go-konveyor-tests
+          path: go-konveyor-tests
+          ref: "${{ env.GOLANG_TESTS_REF }}"
+
+      # TODO Should DRY this
+      - name: set up docker buildx
+        if: ${{ inputs.artifact != '' }}
+        uses: docker/setup-buildx-action@v2
+
+      - name: Download artifact
+        if: ${{ inputs.artifact != '' }}
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.artifact }}
+          path: /tmp/images
+
+      - name: Start minikube
+        uses: konveyor/tackle2-operator/.github/actions/start-minikube@main
+        with:
+          memory: 6500M
+
+      - name: Load images
+        if: ${{ inputs.artifact != '' }}
+        run: |
+          export SHELL=/bin/bash
+          eval $(minikube -p minikube docker-env)
+          for image in $(ls /tmp/images/*.tar); do
+            docker load --input ${image}
+          ; done
+
+      - name: Make bundle
+        uses: konveyor/tackle2-operator/.github/actions/make-bundle@main
+        with:
+          operator_bundle: ${{ env.operator_bundle }}
+          operator: ${{ inputs.operator }}
+          oauth_proxy: ${{ inputs.oauth_proxy }}
+          tackle_hub: ${{ inputs.tackle_hub }}
+          tackle_postgres: ${{ inputs.tackle_postgres }}
+          keycloak_sso: ${{ inputs.keycloak_sso }}
+          keycloak_init: ${{ inputs.keycloak_init }}
+          tackle_ui: ${{ inputs.tackle_ui }}
+          addon_admin: ${{ inputs.addon_admin }}
+          addon_analyzer: ${{ inputs.addon_analyzer }}
+
+      - name: Push bundle
+        run: docker push ${operator_bundle}
+
+      - name: Install konveyor
+        uses: konveyor/tackle2-operator/.github/actions/install-konveyor@main
+        with:
+          bundle_image: ${{ env.operator_bundle }}
+          namespace: ${{ inputs.namespace }}
+          tackle_cr: ${{ inputs.tackle_cr }}
+      # end DRY
+
+      - uses: actions/setup-go@v4
+        with:
+          go-version: 1.18
+
+      - name: Install test dependencies
+        run: |
+          go install github.com/onsi/ginkgo/v2/ginkgo
+        working-directory: go-konveyor-tests
+
+      - name: Build and run golang API tests
+        run: |
+          export HUB_BASE_URL="http://$(minikube ip)/hub"
+          make test-tier0 test-tier1
+        working-directory: go-konveyor-tests
+
+  e2e-ui-integration-tests:
+    if: ${{ inputs.run_ui_tests }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # TODO: Support cypress-split in main tackle-ui-test project
+        # split: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+        tier: [tier1, tier2, tier3]
+    steps:
+
+      - name: Extract pull request number from inputs or PR description
+        run: |
+          PULL_REQUEST_NUMBER=$(echo "${{ github.event.pull_request.body }}" | grep -oP '[U|u][I|i] [T|t]ests [P|p][R|r]: \K\d+' || true)
+          if [ -z "$PULL_REQUEST_NUMBER" ]; then
+            echo "UI_TESTS_REF=${{ inputs.ui_tests_ref }}" >>$GITHUB_ENV
+          else
+            echo "UI_TESTS_REF=refs/pull/$PULL_REQUEST_NUMBER/merge" >>$GITHUB_ENV
+          fi
+
+      - name: Checkout ui tests repo
+        uses: actions/checkout@v3
+        with:
+          repository: konveyor/tackle-ui-tests
+          path: tackle-ui-tests
+          ref: "${{ env.UI_TESTS_REF }}"
+
+      # TODO Should DRY this
+      - name: set up docker buildx
+        if: ${{ inputs.artifact != '' }}
+        uses: docker/setup-buildx-action@v2
+
+      - name: Download artifact
+        if: ${{ inputs.artifact != '' }}
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.artifact }}
+          path: /tmp/images
+
+      - name: Start minikube
+        uses: konveyor/tackle2-operator/.github/actions/start-minikube@main
+        with:
+          memory: 6500M
+
+      - name: Load images
+        if: ${{ inputs.artifact != '' }}
+        run: |
+          export SHELL=/bin/bash
+          eval $(minikube -p minikube docker-env)
+          for image in $(ls /tmp/images/*.tar); do
+            docker load --input ${image}
+          ; done
+
+      - name: Make bundle
+        uses: konveyor/tackle2-operator/.github/actions/make-bundle@main
+        with:
+          operator_bundle: ${{ env.operator_bundle }}
+          operator: ${{ inputs.operator }}
+          oauth_proxy: ${{ inputs.oauth_proxy }}
+          tackle_hub: ${{ inputs.tackle_hub }}
+          tackle_postgres: ${{ inputs.tackle_postgres }}
+          keycloak_sso: ${{ inputs.keycloak_sso }}
+          keycloak_init: ${{ inputs.keycloak_init }}
+          tackle_ui: ${{ inputs.tackle_ui }}
+          addon_admin: ${{ inputs.addon_admin }}
+          addon_analyzer: ${{ inputs.addon_analyzer }}
+
+      - name: Push bundle
+        run: docker push ${operator_bundle}
+
+      - name: Install konveyor
+        uses: konveyor/tackle2-operator/.github/actions/install-konveyor@main
+        with:
+          bundle_image: ${{ env.operator_bundle }}
+          namespace: ${{ inputs.namespace }}
+          tackle_cr: ${{ inputs.tackle_cr }}
+      # end DRY
+
+      - name: Wait for Ingress and expose UI service
+        run: |
+          external_ip=""
+          echo $external_ip;
+          while [[ -z $external_ip ]]
+            do
+              echo "Waiting for end point..."
+                external_ip=$(kubectl get ingress tackle --template="{{range.status.loadBalancer.ingress}}{{.ip}}{{end}}" -n konveyor-tackle);[[ -z $external_ip ]] &&
+                echo $external_ip;
+                sleep 10;
+            done
+          echo "End point ready:" &&
+          echo $external_ip;
+          echo "UI_URL=https://$(minikube ip)" >>$GITHUB_ENV
+
+      - name: Run login tests
+        uses: cypress-io/github-action@v5
+        env:
+          CYPRESS_user: admin
+          CYPRESS_pass: password
+          CYPRESS_tackleUrl: "${{ env.UI_URL }}"
+        with:
+          working-directory: tackle-ui-tests
+          spec: "cypress/e2e/tests/login.test.ts"
+
+      - name: Run UI tests
+        uses: cypress-io/github-action@v5
+        env:
+          CYPRESS_INCLUDE_TAGS: "@${{ matrix.tier }}"
+          CYPRESS_user: "admin"
+          CYPRESS_pass: "Dog8code"
+          CYPRESS_tackleUrl: "${{ env.UI_URL }}"
+          CYPRESS_git_user: "fakeuser"
+          CYPRESS_git_password: "${{ secrets.GITHUB_TOKEN }}"
+          CYPRESS_git_key: "${{ secrets.GITHUB_TOKEN }}"
+          # TODO: Support cypress-split in main tackle-ui-test project
+          # CYPRESS_split: "${{ strategy.job-total }}"
+          # CYPRESS_splitIndex: "${{ strategy.job-index }}"
+        with:
+          working-directory: tackle-ui-tests
+          spec: "**/*.test.ts"
+
+      - name: Upload cypress report  data as artifact
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          # name: tackle-ui-test-reports-${{ matrix.split }}
+          name: tackle-ui-test-reports-${{ matrix.tier }}
+          path: |
+            tackle-ui-tests/cypress/reports
+            tackle-ui-tests/cypress/screenshots
