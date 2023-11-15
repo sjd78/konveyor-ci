@@ -115,7 +115,7 @@ jobs:
     steps:
       - name: Extract pull request number from inputs or PR description
         run: |
-          PULL_REQUEST_NUMBER=$(echo "${{ github.event.pull_request.body }}" | grep -oP '[A|a][P|p][I|i] [T|t]ests [P|p][R|r]: \K\d+' || true)
+          PULL_REQUEST_NUMBER=$(echo "${{ github.event.pull_request.body }}" | grep -oP '[A|a][P|p][I|i] [T|t]ests [P|p][R|r]:\s*\K\d+' || true)
           if [ -z "$PULL_REQUEST_NUMBER" ]; then
             echo "GOLANG_TESTS_REF=${{ inputs.api_tests_ref }}" >>$GITHUB_ENV
           else
