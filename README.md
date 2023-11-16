@@ -1,7 +1,5 @@
 # Konveyor CI
 
-Work in progress.
-
 ## Status
 
 Component | CI (after merge) | Nightly (cron)
