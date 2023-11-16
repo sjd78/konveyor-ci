@@ -13,4 +13,4 @@ jobs:
       run_api_tests: true
       ui_tests_ref: main
       # Disabled while we wait for stability
-      run_ui_tests: false
+      run_ui_tests: true
