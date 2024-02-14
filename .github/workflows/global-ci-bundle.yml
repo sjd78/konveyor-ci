@@ -44,11 +44,6 @@ on:
         type: string
         required: false
         default: ""
-      addon_admin:
-        description: image uri for admin addon (ie. quay.io/<namespace>/<image-name>:<tag>)
-        type: string
-        required: false
-        default: ""
       addon_analyzer:
         description: image uri for analyzer addon (ie. quay.io/<namespace>/<image-name>:<tag>)
         type: string
@@ -117,11 +112,6 @@ on:
         default: ""
       tackle_ui:
         description: image uri for tackle-ui (ie. quay.io/<namespace>/<image-name>:<tag>)
-        type: string
-        required: false
-        default: ""
-      addon_admin:
-        description: image uri for admin addon (ie. quay.io/<namespace>/<image-name>:<tag>)
         type: string
         required: false
         default: ""
@@ -235,7 +225,6 @@ jobs:
           keycloak_sso: ${{ inputs.keycloak_sso }}
           keycloak_init: ${{ inputs.keycloak_init }}
           tackle_ui: ${{ inputs.tackle_ui }}
-          addon_admin: ${{ inputs.addon_admin }}
           addon_analyzer: ${{ inputs.addon_analyzer }}
 
       - name: Push bundle
@@ -328,7 +317,6 @@ jobs:
           keycloak_sso: ${{ inputs.keycloak_sso }}
           keycloak_init: ${{ inputs.keycloak_init }}
           tackle_ui: ${{ inputs.tackle_ui }}
-          addon_admin: ${{ inputs.addon_admin }}
           addon_analyzer: ${{ inputs.addon_analyzer }}
 
       - name: Push bundle
