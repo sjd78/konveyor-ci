@@ -2,6 +2,10 @@ name: Konveyor CI
 
 on: ["push", "pull_request"]
 
+concurrency:
+  group: Konveyor-CI-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   ci:
     uses: ./.github/workflows/global-ci.yml
