@@ -12,5 +12,22 @@ jobs:
       api_tests_ref: main
       run_api_tests: true
       ui_tests_ref: main
-      # Disabled while we wait for stability
-      run_ui_tests: true
+      # Disabled while we wait for stability, enable when UI tests get green
+      run_ui_tests: false
+  report_failure:
+    needs: main-nightly
+    if: ${{ always() && contains(needs.*.result, 'failure') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send failure data to Slack workflow
+        id: slack
+        uses: slackapi/slack-github-action@v1.26.0
+        with:
+          payload: |
+            {
+              "test": "E2E API",
+              "branch": "main",
+              "note": "Failed run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
