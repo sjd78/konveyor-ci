@@ -15,9 +15,10 @@ Component | CI (after merge) | Nightly (cron)
 Branch | Status
 --|--
 **main** | [![Run Konveyor main nightly tests](https://github.com/konveyor/ci/actions/workflows/nightly-main.yaml/badge.svg?branch=main)](https://github.com/konveyor/ci/actions/workflows/nightly-main.yaml)
+**release-0.4** | [![Run Konveyor release-0.4 nightly tests](https://github.com/konveyor/ci/actions/workflows/nightly-release-0.4.yaml/badge.svg?branch=main)](https://github.com/konveyor/ci/actions/workflows/nightly-release-0.4.yaml)
 **release-0.3** | [![Run Konveyor release-0.3 nightly tests](https://github.com/konveyor/ci/actions/workflows/nightly-release-0.3.yaml/badge.svg?branch=main)](https://github.com/konveyor/ci/actions/workflows/nightly-release-0.3.yaml)
 **release-0.2** | [![Run Konveyor release-0.2 nightly tests](https://github.com/konveyor/ci/actions/workflows/nightly-release-0.2.yaml/badge.svg?branch=main)](https://github.com/konveyor/ci/actions/workflows/nightly-release-0.2.yaml)
-**release-0.1** | [![Run Konveyor release-0.1 nightly tests](https://github.com/konveyor/ci/actions/workflows/nightly-release-0.1.yaml/badge.svg?branch=main)](https://github.com/konveyor/ci/actions/workflows/nightly-release-0.1.yaml)
+
 
 
 ## Using the global-ci github workflow
