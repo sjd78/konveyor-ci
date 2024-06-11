@@ -14,6 +14,13 @@ on:
         type: string
         required: false
         default: ""
+      operator_branch:
+        description: |
+          The branch name for operator to be used for setup, e.g. a build for release-0.2,
+          you would specify "release-0.2".
+        required: false
+        type: string
+        default: main
       oauth_proxy:
         description: image uri for oauth_proxy (ie. quay.io/<namespace>/<image-name>:<tag>)
         type: string
@@ -105,6 +112,13 @@ on:
         type: string
         required: false
         default: ""
+      operator_branch:
+        description: |
+          The branch name for operator to be used for setup, e.g. a build for release-0.2,
+          you would specify "release-0.2".
+        required: false
+        type: string
+        default: main
       tackle_hub:
         description: image uri for tackle-hub (ie. quay.io/<namespace>/<image-name>:<tag>)
         type: string
@@ -204,7 +218,7 @@ jobs:
           path: /tmp/images
 
       - name: Start minikube
-        uses: konveyor/tackle2-operator/.github/actions/start-minikube@main
+        uses: konveyor/tackle2-operator/.github/actions/start-minikube@${{ inputs.operator_branch }}
         with:
           memory: 6500M
 
@@ -218,7 +232,7 @@ jobs:
           ; done
 
       - name: Make bundle
-        uses: konveyor/tackle2-operator/.github/actions/make-bundle@main
+        uses: konveyor/tackle2-operator/.github/actions/make-bundle@${{ inputs.operator_branch }}
         with:
           operator_bundle: ${{ env.operator_bundle }}
           operator: ${{ inputs.operator }}
@@ -234,7 +248,7 @@ jobs:
         run: docker push ${operator_bundle}
 
       - name: Install konveyor
-        uses: konveyor/tackle2-operator/.github/actions/install-konveyor@main
+        uses: konveyor/tackle2-operator/.github/actions/install-konveyor@${{ inputs.operator_branch }}
         with:
           bundle_image: ${{ env.operator_bundle }}
           namespace: ${{ inputs.namespace }}
@@ -299,7 +313,7 @@ jobs:
           path: /tmp/images
 
       - name: Start minikube
-        uses: konveyor/tackle2-operator/.github/actions/start-minikube@main
+        uses: konveyor/tackle2-operator/.github/actions/start-minikube@${{ inputs.operator_branch }}
         with:
           memory: 6500M
 
@@ -313,7 +327,7 @@ jobs:
           ; done
 
       - name: Make bundle
-        uses: konveyor/tackle2-operator/.github/actions/make-bundle@main
+        uses: konveyor/tackle2-operator/.github/actions/make-bundle@${{ inputs.operator_branch }}
         with:
           operator_bundle: ${{ env.operator_bundle }}
           operator: ${{ inputs.operator }}
@@ -329,7 +343,7 @@ jobs:
         run: docker push ${operator_bundle}
 
       - name: Install konveyor
-        uses: konveyor/tackle2-operator/.github/actions/install-konveyor@main
+        uses: konveyor/tackle2-operator/.github/actions/install-konveyor@${{ inputs.operator_branch }}
         with:
           bundle_image: ${{ env.operator_bundle }}
           namespace: ${{ inputs.namespace }}

@@ -11,6 +11,13 @@ on:
         required: false
         type: string
         default: latest
+      operator_branch:
+        description: |
+          The branch name for operator to be used for setup, e.g. a build for release-0.2,
+          you would specify "release-0.2".
+        required: false
+        type: string
+        default: main
       component_name:
         description: |
           The name of the component being tested, ie konveyor-hub, analyzer-lsp, etc.
@@ -72,6 +79,13 @@ on:
         required: false
         type: string
         default: latest
+      operator_branch:
+        description: |
+          The branch name for operator to be used for setup, e.g. a build for release-0.2,
+          you would specify "release-0.2".
+        required: false
+        type: string
+        default: main
       component_name:
         description: |
           The name of the component being tested, ie konveyor-hub, analyzer-lsp, etc.
@@ -161,7 +175,7 @@ jobs:
           path: /tmp
 
       - name: start minikube
-        uses: konveyor/tackle2-operator/.github/actions/start-minikube@main
+        uses: konveyor/tackle2-operator/.github/actions/start-minikube@${{ inputs.operator_branch }}
         with:
           memory: 6500M
 
@@ -174,7 +188,7 @@ jobs:
           docker load --input /tmp/${{ inputs.component_name }}.tar
 
       - name: install konveyor
-        uses: konveyor/tackle2-operator/.github/actions/install-tackle@main
+        uses: konveyor/tackle2-operator/.github/actions/install-tackle@${{ inputs.operator_branch }}
         with:
           operator-bundle-image: "quay.io/konveyor/tackle2-operator-bundle:${{ inputs.tag }}"
           hub-image: "quay.io/konveyor/tackle2-hub:${{ inputs.tag }}"
@@ -243,7 +257,7 @@ jobs:
           path: /tmp
 
       - name: start minikube
-        uses: konveyor/tackle2-operator/.github/actions/start-minikube@main
+        uses: konveyor/tackle2-operator/.github/actions/start-minikube@${{ inputs.operator_branch }}
 
       # TODO: Could just load all images found in this artifact so that people can rebuild multiple components if needed
       - name: Load image
@@ -254,7 +268,7 @@ jobs:
           docker load --input /tmp/${{ inputs.component_name }}.tar
 
       - name: install konveyor
-        uses: konveyor/tackle2-operator/.github/actions/install-tackle@main
+        uses: konveyor/tackle2-operator/.github/actions/install-tackle@${{ inputs.operator_branch }}
         with:
           operator-bundle-image: "quay.io/konveyor/tackle2-operator-bundle:${{ inputs.tag }}"
           hub-image: "quay.io/konveyor/tackle2-hub:${{ inputs.tag }}"
