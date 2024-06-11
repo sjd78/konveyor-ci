@@ -175,7 +175,7 @@ jobs:
           path: /tmp
 
       - name: start minikube
-        uses: "konveyor/tackle2-operator/.github/actions/start-minikube@${{ inputs.operator_branch }}"
+        uses: konveyor/tackle2-operator/.github/actions/start-minikube@main
         with:
           memory: 6500M
 
@@ -188,7 +188,30 @@ jobs:
           docker load --input /tmp/${{ inputs.component_name }}.tar
 
       - name: install konveyor
-        uses: "konveyor/tackle2-operator/.github/actions/install-tackle@${{ inputs.operator_branch }}"
+        uses: konveyor/tackle2-operator/.github/actions/install-tackle@release-0.4
+        if: "${{ inputs.operator_branch == 'release-0.4'}}"
+        with:
+          operator-bundle-image: "quay.io/konveyor/tackle2-operator-bundle:${{ inputs.tag }}"
+          hub-image: "quay.io/konveyor/tackle2-hub:${{ inputs.tag }}"
+          ui-image: "quay.io/konveyor/tackle2-ui:${{ inputs.tag }}"
+          addon-analyzer-image: "quay.io/konveyor/tackle2-addon-analyzer:${{ inputs.tag }}"
+          image-pull-policy: IfNotPresent
+          analyzer-container-memory: 0
+          analyzer-container-cpu: 0
+      - name: install konveyor
+        uses: konveyor/tackle2-operator/.github/actions/install-tackle@release-0.3
+        if: "${{ inputs.operator_branch == 'release-0.3'}}"
+        with:
+          operator-bundle-image: "quay.io/konveyor/tackle2-operator-bundle:${{ inputs.tag }}"
+          hub-image: "quay.io/konveyor/tackle2-hub:${{ inputs.tag }}"
+          ui-image: "quay.io/konveyor/tackle2-ui:${{ inputs.tag }}"
+          addon-analyzer-image: "quay.io/konveyor/tackle2-addon-analyzer:${{ inputs.tag }}"
+          image-pull-policy: IfNotPresent
+          analyzer-container-memory: 0
+          analyzer-container-cpu: 0
+      - name: install konveyor
+        uses: konveyor/tackle2-operator/.github/actions/install-tackle@main
+        if: "${{ inputs.operator_branch == 'main'}}"
         with:
           operator-bundle-image: "quay.io/konveyor/tackle2-operator-bundle:${{ inputs.tag }}"
           hub-image: "quay.io/konveyor/tackle2-hub:${{ inputs.tag }}"
@@ -257,7 +280,7 @@ jobs:
           path: /tmp
 
       - name: start minikube
-        uses: "konveyor/tackle2-operator/.github/actions/start-minikube@${{ inputs.operator_branch }}"
+        uses: konveyor/tackle2-operator/.github/actions/start-minikube@main
 
       # TODO: Could just load all images found in this artifact so that people can rebuild multiple components if needed
       - name: Load image
@@ -268,7 +291,30 @@ jobs:
           docker load --input /tmp/${{ inputs.component_name }}.tar
 
       - name: install konveyor
-        uses: "konveyor/tackle2-operator/.github/actions/install-tackle@${{ inputs.operator_branch }}"
+        uses: konveyor/tackle2-operator/.github/actions/install-tackle@release-0.3
+        if: "${{ inputs.operator_branch == 'release-0.3'}}"
+        with:
+          operator-bundle-image: "quay.io/konveyor/tackle2-operator-bundle:${{ inputs.tag }}"
+          hub-image: "quay.io/konveyor/tackle2-hub:${{ inputs.tag }}"
+          ui-image: "quay.io/konveyor/tackle2-ui:${{ inputs.tag }}"
+          addon-analyzer-image: "quay.io/konveyor/tackle2-addon-analyzer:${{ inputs.tag }}"
+          image-pull-policy: IfNotPresent
+          analyzer-container-memory: 0
+          analyzer-container-cpu: 0
+      - name: install konveyor
+        uses: konveyor/tackle2-operator/.github/actions/install-tackle@release-0.4
+        if: "${{ inputs.operator_branch == 'release-0.4'}}"
+        with:
+          operator-bundle-image: "quay.io/konveyor/tackle2-operator-bundle:${{ inputs.tag }}"
+          hub-image: "quay.io/konveyor/tackle2-hub:${{ inputs.tag }}"
+          ui-image: "quay.io/konveyor/tackle2-ui:${{ inputs.tag }}"
+          addon-analyzer-image: "quay.io/konveyor/tackle2-addon-analyzer:${{ inputs.tag }}"
+          image-pull-policy: IfNotPresent
+          analyzer-container-memory: 0
+          analyzer-container-cpu: 0
+      - name: install konveyor
+        uses: konveyor/tackle2-operator/.github/actions/install-tackle@main
+        if: "${{ inputs.operator_branch == 'main'}}"
         with:
           operator-bundle-image: "quay.io/konveyor/tackle2-operator-bundle:${{ inputs.tag }}"
           hub-image: "quay.io/konveyor/tackle2-hub:${{ inputs.tag }}"
