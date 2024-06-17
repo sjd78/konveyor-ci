@@ -11,13 +11,13 @@ on:
         required: false
         type: string
         default: latest
-      operator_branch:
+      operator_tag:
         description: |
-          The branch name for operator to be used for setup, e.g. a build for release-0.2,
-          you would specify "release-0.2".
+          The tag name for operator to be used for setup, e.g. a build for release-0.3,
+          you would specify "v0.3.0".
         required: false
         type: string
-        default: main
+        default: latest
       component_name:
         description: |
           The name of the component being tested, ie konveyor-hub, analyzer-lsp, etc.
@@ -79,13 +79,13 @@ on:
         required: false
         type: string
         default: latest
-      operator_branch:
+      operator_tag:
         description: |
-          The branch name for operator to be used for setup, e.g. a build for release-0.2,
-          you would specify "release-0.2".
+          The tag name for operator to be used for setup, e.g. a build for release-0.3,
+          you would specify "v0.3.0".
         required: false
         type: string
-        default: main
+        default: latest
       component_name:
         description: |
           The name of the component being tested, ie konveyor-hub, analyzer-lsp, etc.
@@ -189,9 +189,9 @@ jobs:
 
       - name: install konveyor
         uses: konveyor/tackle2-operator/.github/actions/install-tackle@release-0.4
-        if: "${{ inputs.operator_branch == 'release-0.4'}}"
+        if: "${{ startsWith(inputs.operator_tag, 'v0.4') }}"
         with:
-          operator-bundle-image: "quay.io/konveyor/tackle2-operator-bundle:${{ inputs.tag }}"
+          operator-bundle-image: "quay.io/konveyor/tackle2-operator-bundle:${{ inputs.operator_tag }}"
           hub-image: "quay.io/konveyor/tackle2-hub:${{ inputs.tag }}"
           ui-image: "quay.io/konveyor/tackle2-ui:${{ inputs.tag }}"
           addon-analyzer-image: "quay.io/konveyor/tackle2-addon-analyzer:${{ inputs.tag }}"
@@ -200,9 +200,9 @@ jobs:
           analyzer-container-cpu: 0
       - name: install konveyor
         uses: konveyor/tackle2-operator/.github/actions/install-tackle@release-0.3
-        if: "${{ inputs.operator_branch == 'release-0.3'}}"
+        if: "${{ startsWith(inputs.operator_tag, 'v0.3') }}"
         with:
-          operator-bundle-image: "quay.io/konveyor/tackle2-operator-bundle:${{ inputs.tag }}"
+          operator-bundle-image: "quay.io/konveyor/tackle2-operator-bundle:${{ inputs.operator_tag }}"
           hub-image: "quay.io/konveyor/tackle2-hub:${{ inputs.tag }}"
           ui-image: "quay.io/konveyor/tackle2-ui:${{ inputs.tag }}"
           addon-analyzer-image: "quay.io/konveyor/tackle2-addon-analyzer:${{ inputs.tag }}"
@@ -211,9 +211,9 @@ jobs:
           analyzer-container-cpu: 0
       - name: install konveyor
         uses: konveyor/tackle2-operator/.github/actions/install-tackle@main
-        if: "${{ inputs.operator_branch == 'main'}}"
+        if: "${{ inputs.operator_tag == 'latest'}}"
         with:
-          operator-bundle-image: "quay.io/konveyor/tackle2-operator-bundle:${{ inputs.tag }}"
+          operator-bundle-image: "quay.io/konveyor/tackle2-operator-bundle:${{ inputs.operator_tag }}"
           hub-image: "quay.io/konveyor/tackle2-hub:${{ inputs.tag }}"
           ui-image: "quay.io/konveyor/tackle2-ui:${{ inputs.tag }}"
           addon-analyzer-image: "quay.io/konveyor/tackle2-addon-analyzer:${{ inputs.tag }}"
@@ -291,10 +291,10 @@ jobs:
           docker load --input /tmp/${{ inputs.component_name }}.tar
 
       - name: install konveyor
-        uses: konveyor/tackle2-operator/.github/actions/install-tackle@release-0.3
-        if: "${{ inputs.operator_branch == 'release-0.3'}}"
+        uses: konveyor/tackle2-operator/.github/actions/install-tackle@release-0.4
+        if: "${{ startsWith(inputs.operator_tag, 'v0.4') }}"
         with:
-          operator-bundle-image: "quay.io/konveyor/tackle2-operator-bundle:${{ inputs.tag }}"
+          operator-bundle-image: "quay.io/konveyor/tackle2-operator-bundle:${{ inputs.operator_tag }}"
           hub-image: "quay.io/konveyor/tackle2-hub:${{ inputs.tag }}"
           ui-image: "quay.io/konveyor/tackle2-ui:${{ inputs.tag }}"
           addon-analyzer-image: "quay.io/konveyor/tackle2-addon-analyzer:${{ inputs.tag }}"
@@ -302,10 +302,10 @@ jobs:
           analyzer-container-memory: 0
           analyzer-container-cpu: 0
       - name: install konveyor
-        uses: konveyor/tackle2-operator/.github/actions/install-tackle@release-0.4
-        if: "${{ inputs.operator_branch == 'release-0.4'}}"
+        uses: konveyor/tackle2-operator/.github/actions/install-tackle@release-0.3
+        if: "${{ startsWith(inputs.operator_tag, 'v0.3') }}"
         with:
-          operator-bundle-image: "quay.io/konveyor/tackle2-operator-bundle:${{ inputs.tag }}"
+          operator-bundle-image: "quay.io/konveyor/tackle2-operator-bundle:${{ inputs.operator_tag }}"
           hub-image: "quay.io/konveyor/tackle2-hub:${{ inputs.tag }}"
           ui-image: "quay.io/konveyor/tackle2-ui:${{ inputs.tag }}"
           addon-analyzer-image: "quay.io/konveyor/tackle2-addon-analyzer:${{ inputs.tag }}"
@@ -314,9 +314,9 @@ jobs:
           analyzer-container-cpu: 0
       - name: install konveyor
         uses: konveyor/tackle2-operator/.github/actions/install-tackle@main
-        if: "${{ inputs.operator_branch == 'main'}}"
+        if: "${{ inputs.operator_tag == 'latest'}}"
         with:
-          operator-bundle-image: "quay.io/konveyor/tackle2-operator-bundle:${{ inputs.tag }}"
+          operator-bundle-image: "quay.io/konveyor/tackle2-operator-bundle:${{ inputs.operator_tag }}"
           hub-image: "quay.io/konveyor/tackle2-hub:${{ inputs.tag }}"
           ui-image: "quay.io/konveyor/tackle2-ui:${{ inputs.tag }}"
           addon-analyzer-image: "quay.io/konveyor/tackle2-addon-analyzer:${{ inputs.tag }}"
