@@ -220,6 +220,7 @@ jobs:
       - name: Check addon_analyzer image exists
         if: ${{ inputs.addon_analyzer != '' }}
         run: docker manifest inspect ${{ inputs.addon_analyzer }}
+      - name: Check addon_discovery image exists
         if: ${{ inputs.addon_discovery != '' }}
         run: docker manifest inspect ${{ inputs.addon_discovery }}
 
