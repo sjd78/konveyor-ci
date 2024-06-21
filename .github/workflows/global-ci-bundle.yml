@@ -284,7 +284,6 @@ jobs:
         uses: konveyor/tackle2-operator/.github/actions/make-bundle@main
         with:
           operator_bundle: ${{ env.operator_bundle }}
-          operator: ${{ inputs.operator }}
           oauth_proxy: ${{ inputs.oauth_proxy }}
           tackle_hub: ${{ inputs.tackle_hub }}
           tackle_postgres: ${{ inputs.tackle_postgres }}
@@ -383,7 +382,6 @@ jobs:
         uses: konveyor/tackle2-operator/.github/actions/make-bundle@main
         with:
           operator_bundle: ${{ env.operator_bundle }}
-          operator: ${{ inputs.operator }}
           oauth_proxy: ${{ inputs.oauth_proxy }}
           tackle_hub: ${{ inputs.tackle_hub }}
           tackle_postgres: ${{ inputs.tackle_postgres }}
