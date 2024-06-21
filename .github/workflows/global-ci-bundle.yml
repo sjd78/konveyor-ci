@@ -49,6 +49,11 @@ on:
         type: string
         required: false
         default: ""
+      addon_discovery:
+        description: image uri for discovery addon (ie. quay.io/<namespace>/<image-name>:<tag>)
+        type: string
+        required: false
+        default: ""
       namespace:
         description: |
           Namespace for the konveyor install.
@@ -120,6 +125,11 @@ on:
         type: string
         required: false
         default: ""
+      addon_discovery:
+        description: image uri for discovery addon (ie. quay.io/<namespace>/<image-name>:<tag>)
+        type: string
+        required: false
+        default: ""
       tackle_cr:
         description: |
           Full JSON encoded string representing the Tackle resource to be created.
@@ -181,10 +191,11 @@ jobs:
           INIT: ${{ inputs.keycloak_init }}
           UI: ${{ inputs.tackle_ui }}
           ANALYZER: ${{ inputs.addon_analyzer }}
+          DISCOVERY: ${{ inputs.addon_discovery }}
         run: |
           docker manifest inspect ${{ inputs.operator_bundle }}
           # My cheap way to check if any other image is set
-          if [ -n "${PROXY}${HUB}${POSTGRES}${SSO}${INIT}${UI}${ANALYZER}" ]; then
+          if [ -n "${PROXY}${HUB}${POSTGRES}${SSO}${INIT}${UI}${ANALYZER}${DISCOVERY}" ]; then
             echo "::warning:: operator_bundle takes precendent over any other image specified!"
             echo "::warning:: consider removing the image and setting it on the Tackle CR."
           fi
@@ -209,6 +220,8 @@ jobs:
       - name: Check addon_analyzer image exists
         if: ${{ inputs.addon_analyzer != '' }}
         run: docker manifest inspect ${{ inputs.addon_analyzer }}
+        if: ${{ inputs.addon_discovery != '' }}
+        run: docker manifest inspect ${{ inputs.addon_discovery }}
 
   e2e-api-integration-tests:
     needs: check-images
@@ -273,6 +286,7 @@ jobs:
           keycloak_init: ${{ inputs.keycloak_init }}
           tackle_ui: ${{ inputs.tackle_ui }}
           addon_analyzer: ${{ inputs.addon_analyzer }}
+          addon_discovery: ${{ inputs.addon_discovery }}
 
       - name: Push bundle
         if: ${{ inputs.operator_bundle == '' }}
@@ -371,6 +385,7 @@ jobs:
           keycloak_init: ${{ inputs.keycloak_init }}
           tackle_ui: ${{ inputs.tackle_ui }}
           addon_analyzer: ${{ inputs.addon_analyzer }}
+          addon_discovery: ${{ inputs.addon_discovery }}
 
       - name: Push bundle
         if: ${{ inputs.operator_bundle == '' }}
