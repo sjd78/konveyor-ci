@@ -14,11 +14,6 @@ on:
         type: string
         required: false
         default: ""
-      operator:
-        description: image uri for operator (ie. quay.io/<namespace>/<image-name>:<tag>). Must be pullable.
-        type: string
-        required: false
-        default: ""
       oauth_proxy:
         description: image uri for oauth_proxy (ie. quay.io/<namespace>/<image-name>:<tag>)
         type: string
