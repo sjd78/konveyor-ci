@@ -310,6 +310,8 @@ jobs:
         working-directory: go-konveyor-tests
 
       - name: Build and run golang API tests
+        env:
+          DEBUG: 1
         run: |
           export HUB_BASE_URL="http://$(minikube ip)/hub"
           make test-tier0 test-tier1
