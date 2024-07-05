@@ -249,7 +249,8 @@ jobs:
       - name: Start minikube
         uses: konveyor/tackle2-operator/.github/actions/start-minikube@main
         with:
-          memory: 6500M
+          memory: 'max'
+          cpu: 'max'
 
       - name: Load images
         if: ${{ inputs.artifact != '' }}
@@ -349,7 +350,8 @@ jobs:
       - name: Start minikube
         uses: konveyor/tackle2-operator/.github/actions/start-minikube@main
         with:
-          memory: 6500M
+          memory: 'max'
+          cpu: 'max'
 
       - name: Load images
         if: ${{ inputs.artifact != '' }}
