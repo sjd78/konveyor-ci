@@ -177,7 +177,8 @@ jobs:
       - name: start minikube
         uses: konveyor/tackle2-operator/.github/actions/start-minikube@main
         with:
-          memory: 6500M
+          memory: 'max'
+          cpu: 'max'
 
       # TODO: Could just load all images found in this artifact so that people can rebuild multiple components if needed
       - name: Load image
@@ -281,6 +282,9 @@ jobs:
 
       - name: start minikube
         uses: konveyor/tackle2-operator/.github/actions/start-minikube@main
+        with:
+          memory: 'max'
+          cpu: 'max'
 
       # TODO: Could just load all images found in this artifact so that people can rebuild multiple components if needed
       - name: Load image
