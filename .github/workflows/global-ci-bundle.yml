@@ -258,7 +258,7 @@ jobs:
         uses: konveyor/tackle2-operator/.github/actions/start-minikube@main
         with:
           memory: 'max'
-          cpu: 'max'
+          cpus: 'max'
 
       - name: Load images
         if: ${{ inputs.artifact != '' }}
@@ -360,7 +360,7 @@ jobs:
         uses: konveyor/tackle2-operator/.github/actions/start-minikube@main
         with:
           memory: 'max'
-          cpu: 'max'
+          cpus: 'max'
 
       - name: Load images
         if: ${{ inputs.artifact != '' }}
