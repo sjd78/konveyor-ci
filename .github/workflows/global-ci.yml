@@ -230,6 +230,17 @@ jobs:
           analyzer-container-memory: 0
           analyzer-container-cpu: 0
       - name: install konveyor
+        uses: konveyor/tackle2-operator/.github/actions/install-tackle@release-0.5
+        if: "${{ inputs.operator_tag == 'v0.5'}}"
+        with:
+          operator-bundle-image: "quay.io/konveyor/tackle2-operator-bundle:${{ inputs.operator_tag }}"
+          hub-image: "quay.io/konveyor/tackle2-hub:${{ inputs.tag }}"
+          ui-image: "quay.io/konveyor/tackle2-ui:${{ inputs.tag }}"
+          addon-analyzer-image: "quay.io/konveyor/tackle2-addon-analyzer:${{ inputs.tag }}"
+          image-pull-policy: IfNotPresent
+          analyzer-container-memory: 0
+          analyzer-container-cpu: 0
+      - name: install konveyor
         uses: konveyor/tackle2-operator/.github/actions/install-tackle@main
         if: "${{ inputs.operator_tag == 'latest'}}"
         with:
