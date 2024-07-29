@@ -231,7 +231,7 @@ jobs:
           analyzer-container-cpu: 0
       - name: install konveyor
         uses: konveyor/tackle2-operator/.github/actions/install-tackle@release-0.5
-        if: "${{ inputs.operator_tag == 'v0.5'}}"
+        if: "${{ startsWith(inputs.operator_tag, 'v0.5') }}"
         with:
           operator-bundle-image: "quay.io/konveyor/tackle2-operator-bundle:${{ inputs.operator_tag }}"
           hub-image: "quay.io/konveyor/tackle2-hub:${{ inputs.tag }}"
