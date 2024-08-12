@@ -10,7 +10,7 @@ jobs:
     uses: ./.github/workflows/global-ci.yml
     with:
       tag: release-0.5
-      operator_tag: v0.5.0
+      operator_tag: v0.5.1
       api_tests_ref: release-0.5
       run_api_tests: true
       # TODO: this needs to be pinned to a release-0.5 specific branch
