@@ -199,8 +199,8 @@ jobs:
           memory: 'max'
           cpus: 'max'
       - name: start minikube
-        uses: konveyor/tackle2-operator/.github/actions/start-minikube@release-0.3
-        if: "${{ startsWith(inputs.operator_tag, 'v0.3') }}"
+        uses: konveyor/tackle2-operator/.github/actions/start-minikube@release-0.6
+        if: "${{ startsWith(inputs.operator_tag, 'v0.6') }}"
         with:
           memory: 'max'
           cpus: 'max'
