@@ -51,9 +51,9 @@ jobs:
           podman save -o /tmp/analyzer-lsp.tar quay.io/konveyor/analyzer-lsp:latest
 
       - name: Upload image as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: analyzer-lsp
+          name: analyzer-lsp    # If uploading multiple artifacts in the workflow, make sure there is a unique name for each
           path: /tmp/analyzer-lsp.tar
           # This prevents too many artifacts from accumulating in your repository
           retention-days: 1
