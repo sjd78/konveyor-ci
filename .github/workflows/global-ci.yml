@@ -181,7 +181,7 @@ jobs:
 
       - name: Download artifact
         if: "${{ inputs.component_name != '' }}"
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.component_name }}
           path: /tmp
@@ -317,7 +317,7 @@ jobs:
 
       - name: Download artifact
         if: "${{ inputs.component_name != '' }}"
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.component_name }}
           path: /tmp
