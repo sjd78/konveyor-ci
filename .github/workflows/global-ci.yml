@@ -234,7 +234,7 @@ jobs:
           eval $(minikube -p minikube docker-env)
           for image in $(ls /tmp/images/*.tar); do
             docker load --input ${image}
-          ; done
+          done
 
       - name: install konveyor
         uses: konveyor/tackle2-operator/.github/actions/install-tackle@release-0.4
@@ -354,7 +354,7 @@ jobs:
           eval $(minikube -p minikube docker-env)
           for image in $(ls /tmp/images/*.tar); do
             docker load --input ${image}
-          ; done
+          done
 
       - name: install konveyor
         uses: konveyor/tackle2-operator/.github/actions/install-tackle@release-0.4
