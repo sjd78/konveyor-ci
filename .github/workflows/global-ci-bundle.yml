@@ -120,11 +120,11 @@ on:
       ui_test_tags:
         description: |
           A comma separated list of test tags/tiers to select the ui tests to run. Each tag/tier
-          needs to be explicitly included in the list. For example, to use tiers 0, 1, and 2,
-          the value should be: "@tier0,@tier1,@tier2".
+          needs to be explicitly included in the list. For example, to use tiers ci, 0, 1, and 2,
+          the value should be: "@ci,@tier0,@tier1,@tier2".
         required: false
         type: string
-        default: "@tier0"
+        default: "@ci"
 
   workflow_dispatch:
     inputs:
@@ -191,11 +191,11 @@ on:
       ui_test_tags:
         description: |
           A comma separated list of test tags/tiers to select the ui tests to run. Each tag/tier
-          needs to be explicitly included in the list. For example, to use tiers 0, 1, and 2,
-          the value should be: "@tier0,@tier1,@tier2".
+          needs to be explicitly included in the list. For example, to use tiers ci, 0, 1, and 2,
+          the value should be: "@ci,@tier0,@tier1,@tier2".
         required: false
         type: string
-        default: "@tier0"
+        default: "@ci"
 
 env:
   operator_bundle: ttl.sh/konveyor-operator-bundle-${{ github.sha }}:2h
