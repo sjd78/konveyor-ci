@@ -1,4 +1,4 @@
-name: Konveyor CI via Operator Bundle
+name: Konveyor e2e CI via Operator Bundle shared workflow
 
 on:
   workflow_call:
@@ -291,6 +291,7 @@ jobs:
 
       - name: Load images
         if: ${{ inputs.artifact != '' }}
+        # TODO: Have this use find so directory structure isn't a factor (like in ovirt scripts)
         run: |
           export SHELL=/bin/bash
           eval $(minikube -p minikube docker-env)
