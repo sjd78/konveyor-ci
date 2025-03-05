@@ -1,0 +1,55 @@
+name: Konveyor CI repo testing for PRs and pushes to main
+
+on:
+  push:
+    branches:
+      - "main"
+
+  pull_request:
+    branches:
+      - "main"
+
+concurrency:
+  group: ci-repo-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-images-to-test-loading:
+    runs-on: ubuntu-latest
+    steps:
+      - name: pull some images from docker or quay.io and save them to a tar file
+        run: |
+          docker pull docker.io/library/busybox:latest
+          docker pull quay.io/fedora/fedora:latest
+          docker pull registry.access.redhat.com/ubi9/nodejs-20-minimal:latest
+
+          mkdir -p /tmp/images/a /tmp/images/b
+
+          docker save -o /tmp/images/busybox.tar docker.io/library/busybox:latest
+          docker save -o /tmp/images/a/fedora.tar quay.io/fedora/fedora:latest
+          docker save -o /tmp/images/b/nodejs.tar registry.access.redhat.com/ubi9/nodejs-20-minimal:latest
+
+      - name: Upload test image as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-images
+          path: /tmp/images/**/*.tar
+          retention-days: 1
+
+  global-ci:
+    needs: build-images-to-test-loading
+    name: Verify api and ui tests run via `global-ci.yml` with default inputs
+    uses: ./.github/workflows/global-ci.yml
+    with:
+      component_name: test-images
+      run_api_tests: true
+      run_ui_tests: true
+
+  global-ci-bundle:
+    needs: build-images-to-test-loading
+    name: Verify api and ui tests run via `global-ci-bundle.yml` with default input
+    uses: ./.github/workflows/global-ci-bundle.yml
+    with:
+      artifact: test-images
+      run_api_tests: true
+      run_ui_tests: true
