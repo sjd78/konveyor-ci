@@ -1,6 +1,14 @@
 # Konveyor CI
 
-## Status
+## Releases nightly status
+
+Branch | Konveyor | CLI
+--|--|--
+**main** | [![Run Konveyor main nightly tests](https://github.com/konveyor/ci/actions/workflows/nightly-main.yaml/badge.svg?branch=main)](https://github.com/konveyor/ci/actions/workflows/nightly-main.yaml) | [![Nightly CLI test for main](https://github.com/konveyor-ecosystem/kantra-cli-tests/actions/workflows/nightly-main-latest.yaml/badge.svg)](https://github.com/konveyor-ecosystem/kantra-cli-tests/actions/workflows/nightly-main-latest.yaml)
+**release-0.7** | [![Run Konveyor release-0.7 nightly tests](https://github.com/konveyor/ci/actions/workflows/nightly-release-0.7.yaml/badge.svg?branch=main)](https://github.com/konveyor/ci/actions/workflows/nightly-release-0.7.yaml) | [![Nightly CLI test for release-0.7](https://github.com/konveyor-ecosystem/kantra-cli-tests/actions/workflows/nightly-main-release07.yaml/badge.svg)](https://github.com/konveyor-ecosystem/kantra-cli-tests/actions/workflows/nightly-main-release07.yaml)
+**release-0.6** | [![Run Konveyor release-0.6 nightly tests](https://github.com/konveyor/ci/actions/workflows/nightly-release-0.6.yaml/badge.svg?branch=main)](https://github.com/konveyor/ci/actions/workflows/nightly-release-0.6.yaml) | [![Nightly CLI test for release-0.6](https://github.com/konveyor-ecosystem/kantra-cli-tests/actions/workflows/nightly-main-release06.yaml/badge.svg)](https://github.com/konveyor-ecosystem/kantra-cli-tests/actions/workflows/nightly-main-release06.yaml)
+
+## Repositories status
 
 Component | CI (after merge) | Nightly (cron)
 --|--|--
@@ -9,16 +17,6 @@ Component | CI (after merge) | Nightly (cron)
 **E2E API** | [![Test TIER0](https://github.com/konveyor/go-konveyor-tests/actions/workflows/main-tier0.yml/badge.svg)](https://github.com/konveyor/go-konveyor-tests/actions/workflows/main-tier0.yml) [![Test TIER1](https://github.com/konveyor/go-konveyor-tests/actions/workflows/main-tier1.yml/badge.svg)](https://github.com/konveyor/go-konveyor-tests/actions/workflows/main-tier1.yml) [![Test TIER2](https://github.com/konveyor/go-konveyor-tests/actions/workflows/main-tier2.yml/badge.svg)](https://github.com/konveyor/go-konveyor-tests/actions/workflows/main-tier2.yml) | [![Test nightly TIER0](https://github.com/konveyor/go-konveyor-tests/actions/workflows/nightly-tier0.yml/badge.svg)](https://github.com/konveyor/go-konveyor-tests/actions/workflows/nightly-tier0.yml) [![Test nightly TIER1](https://github.com/konveyor/go-konveyor-tests/actions/workflows/nightly-tier1.yml/badge.svg)](https://github.com/konveyor/go-konveyor-tests/actions/workflows/nightly-tier1.yml) [![Test nightly TIER2](https://github.com/konveyor/go-konveyor-tests/actions/workflows/nightly-tier2.yml/badge.svg)](https://github.com/konveyor/go-konveyor-tests/actions/workflows/nightly-tier2.yml) [![Test nightly TIER3](https://img.shields.io/endpoint?url=https%3A%2F%2Fsajidmansoori12.pythonanywhere.com%2Fretrieve_data%3Fpipeline%3Dtier3-nightly&cacheSeconds=60)](https://jenkins-csb-migrationqe-main.dno.corp.redhat.com/view/MTA/job/mta/job/konveyor-tier3-nightly/)
 **E2E UI** | [![UI Tier0 test](https://github.com/konveyor/tackle-ui-tests/actions/workflows/ui-tier0.yaml/badge.svg?branch=main)](https://github.com/konveyor/tackle-ui-tests/actions/workflows/ui-tier0.yaml) | [![UI E2E test](https://github.com/konveyor/tackle-ui-tests/actions/workflows/k8s-cron.yml/badge.svg?branch=main)](https://github.com/konveyor/tackle-ui-tests/actions/workflows/k8s-cron.yml) [![Test UI nightly TIER1](https://img.shields.io/endpoint?url=https%3A%2F%2Fsajidmansoori12.pythonanywhere.com%2Fretrieve_data%3Fpipeline%3Dui-tier1-nightly&cacheSeconds=60)](https://jenkins-csb-migrationqe-main.dno.corp.redhat.com/view/Konveyor/job/mta/job/konveyor-ui-tier1-nightly/)
 **Kantra CLI** | | [![Nightly CLI test for main](https://github.com/konveyor-ecosystem/kantra-cli-tests/actions/workflows/nightly-main-latest.yaml/badge.svg)](https://github.com/konveyor-ecosystem/kantra-cli-tests/actions/workflows/nightly-main-latest.yaml)
-
-### Release nightlies
-
-Branch | Status | &nbsp;
---|--|--
-**main** | [![Run Konveyor main nightly tests](https://github.com/konveyor/ci/actions/workflows/nightly-main.yaml/badge.svg?branch=main)](https://github.com/konveyor/ci/actions/workflows/nightly-main.yaml) | [![Nightly CLI test for main](https://github.com/konveyor-ecosystem/kantra-cli-tests/actions/workflows/nightly-main-latest.yaml/badge.svg)](https://github.com/konveyor-ecosystem/kantra-cli-tests/actions/workflows/nightly-main-latest.yaml)
-**release-0.6** | [![Run Konveyor release-0.6 nightly tests](https://github.com/konveyor/ci/actions/workflows/nightly-release-0.6.yaml/badge.svg?branch=main)](https://github.com/konveyor/ci/actions/workflows/nightly-release-0.6.yaml) | [![Nightly CLI test for release-0.6](https://github.com/konveyor-ecosystem/kantra-cli-tests/actions/workflows/nightly-main-release06.yaml/badge.svg)](https://github.com/konveyor-ecosystem/kantra-cli-tests/actions/workflows/nightly-main-release06.yaml)
-**release-0.5** | [![Run Konveyor release-0.5 nightly tests](https://github.com/konveyor/ci/actions/workflows/nightly-release-0.5.yaml/badge.svg?branch=main)](https://github.com/konveyor/ci/actions/workflows/nightly-release-0.5.yaml) |
-**release-0.4** | [![Run Konveyor release-0.4 nightly tests](https://github.com/konveyor/ci/actions/workflows/nightly-release-0.4.yaml/badge.svg?branch=main)](https://github.com/konveyor/ci/actions/workflows/nightly-release-0.4.yaml) |
-
 
 
 ## Using the global-ci github workflow

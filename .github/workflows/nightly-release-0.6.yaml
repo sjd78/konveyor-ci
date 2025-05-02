@@ -13,8 +13,7 @@ jobs:
       operator_tag: v0.6.0
       api_tests_ref: release-0.6
       run_api_tests: true
-      # TODO: this needs to be pinned to a release-0.6 specific branch
-      ui_tests_ref: main
+      ui_tests_ref: release-0.6
       # Disabled while we wait for stability
       run_ui_tests: false
   report_failure:
