@@ -287,8 +287,19 @@ jobs:
         run: |
           export HUB_BASE_URL="http://$(minikube ip)/hub"
           export HUB_TESTS_REF="${{ inputs.api_hub_tests_ref }}"
-          ${{ inputs.api_tests_tiers }}
+          export DEBUG=1
+          set -o pipefail; ${{ inputs.api_tests_tiers }} | tee /tmp/tests.log
         working-directory: go-konveyor-tests
+      - name: Prepare summary
+        if: always()
+        run: cat /tmp/tests.log | grep -- --- >> $GITHUB_STEP_SUMMARY
+      - name: Upload analysis tests output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: analysis-tests-output
+          include-hidden-files: true
+          path: analysis/tmp_output
 
   e2e-ui-integration-tests:
     if: ${{ inputs.run_ui_tests }}
