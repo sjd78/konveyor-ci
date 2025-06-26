@@ -208,7 +208,7 @@ on:
         default: "@ci"
 
 env:
-  operator_bundle: ttl.sh/konveyor-operator-bundle-${{ github.sha }}:2h
+  operator_bundle: ttl.sh/konveyor-operator-bundle-${{ github.sha }}:4h
 
 jobs:
   check-images:
