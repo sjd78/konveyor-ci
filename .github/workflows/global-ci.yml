@@ -423,6 +423,7 @@ jobs:
           CYPRESS_user: admin
           CYPRESS_pass: password
           CYPRESS_baseUrl: "${{ env.UI_URL }}"
+          CYPRESS_tackleUrl: "${{ env.UI_URL }}"
         with:
           working-directory: tackle-ui-tests
           spec: "cypress/e2e/tests/login.test.ts"
@@ -434,6 +435,7 @@ jobs:
           CYPRESS_user: "admin"
           CYPRESS_pass: "Dog8code"
           CYPRESS_baseUrl: "${{ env.UI_URL }}"
+          CYPRESS_tackleUrl: "${{ env.UI_URL }}"
           CYPRESS_git_user: "fakeuser"
           CYPRESS_git_password: "${{ secrets.GITHUB_TOKEN }}"
           CYPRESS_git_key: "${{ secrets.GITHUB_TOKEN }}"
