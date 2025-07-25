@@ -1,6 +1,7 @@
 ---
 description: book-store basic analysis
 input: https://github.com/ibraginsky/book-server
+filename: book-server
 sources:
 - java-ee
 - springboot
