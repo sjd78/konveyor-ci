@@ -1,5 +1,10 @@
 ---
 description: book-store basic analysis
+application:
+  name: book-server
+  repository:
+    url: https://github.com/ibraginsky/book-server
+    kind: git
 input: https://github.com/ibraginsky/book-server
 filename: book-server
 sources:
@@ -9,3 +14,5 @@ targets:
 - cloud-readiness
 - linux
 - quarkus
+withDeps: true
+
