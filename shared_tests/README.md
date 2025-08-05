@@ -11,11 +11,10 @@ Component test suites that should use those shared tests are:
 
 ```
 └── shared_tests
-    └── analysis_book-server    # `analysis_` + name of the test, usually name of the application
-        ├── dependencies.yaml   # analyzer-like dependencies output (produced in full analysis mode)
-        ├── output.yaml         # analyzer-like analysis output (contain ruleset with violations/issues reported and optionally Tags on technology usage and discovery)
-        ├── tc.yaml             # analysis test definition (application link, sources, targets, etc.)
-        └── <input_app>         # Test application binary (or ommited if linked from remote git repo)
+    ├── book-server_deps        # name of the test case
+    |    ├── dependencies.yaml   # analyzer-like dependencies output (produced in full analysis mode)
+    |    └── output.yaml         # analyzer-like analysis output (contain ruleset with violations/issues reported and optionally Tags on technology usage and discovery)
+    └── test_cases.yaml          # analysis test cases definition (top level keys should match to directory names with expected results)
 ```
 
 ```
