@@ -1,5 +1,5 @@
 ---
-book_server_deps:
+book-server_deps:
   description: book-store basic analysis
   application:
     name: book-server
