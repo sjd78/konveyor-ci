@@ -1,0 +1,35 @@
+---
+book-server_deps:
+  description: book-store basic analysis
+  application:
+    name: book-server
+    repository:
+      url: https://github.com/ibraginsky/book-server
+      kind: git
+  input: https://github.com/ibraginsky/book-server  # TODO: discuss and unify input application definition
+  filename: book-server
+  sources:
+  - java-ee
+  - springboot
+  targets:
+  - cloud-readiness
+  - linux
+  - quarkus
+  withDeps: true
+#book_server_source:
+#  description: book-store basic source analysis
+#  application:
+#    name: book-server
+#    repository:
+#      url: https://github.com/ibraginsky/book-server
+#      kind: git
+#  input: https://github.com/ibraginsky/book-server  # TODO: discuss and unify input application definition
+#  filename: book-server
+#  sources:
+#  - java-ee
+#  - springboot
+#  targets:
+#  - cloud-readiness
+#  - linux
+#  - quarkus
+#  withDeps: false

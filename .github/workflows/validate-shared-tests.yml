@@ -1,0 +1,56 @@
+name: Validate Shared Tests Structure
+
+on:
+  pull_request:
+    paths:
+      - 'shared_tests/**'
+
+jobs:
+  validate-structure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate test cases match directories
+        run: |
+          #!/bin/bash
+          set -e
+          
+          # Get top-level keys from test_cases.yml
+          if [ ! -f "shared_tests/test_cases.yml" ]; then
+            echo "Error: shared_tests/test_cases.yml not found"
+            exit 1
+          fi
+          
+          # Extract top-level keys (non-commented lines that end with colon and start at beginning of line)
+          yaml_keys=$(grep -E '^[a-zA-Z0-9_-]+:' shared_tests/test_cases.yml | sed 's/:.*$//' | sort)
+          
+          # Get subdirectories in shared_tests (excluding files)
+          if [ ! -d "shared_tests" ]; then
+            echo "Error: shared_tests directory not found"
+            exit 1
+          fi
+          
+          subdirs=$(find shared_tests -maxdepth 1 -type d ! -path shared_tests | sed 's|shared_tests/||' | sort)
+          
+          echo "YAML top-level keys found:"
+          echo "$yaml_keys"
+          echo
+          echo "Subdirectories found:"
+          echo "$subdirs"
+          echo
+          
+          # Check if keys match subdirectories
+          if [ "$yaml_keys" != "$subdirs" ]; then
+            echo "❌ Validation failed: Top-level keys in test_cases.yml do not match subdirectories in shared_tests/"
+            echo
+            echo "Keys in YAML but not as subdirectories:"
+            comm -23 <(echo "$yaml_keys") <(echo "$subdirs")
+            echo
+            echo "Subdirectories but not as keys in YAML:"
+            comm -13 <(echo "$yaml_keys") <(echo "$subdirs")
+            exit 1
+          else
+            echo "✅ Validation passed: All top-level keys in test_cases.yml have matching subdirectories"
+          fi
