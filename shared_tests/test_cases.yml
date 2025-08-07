@@ -1,6 +1,6 @@
 ---
 book-server_deps:
-  description: book-store basic source + deps analysis
+  description: book-store source + deps analysis
   application:
     name: book-server
     repository:
@@ -15,11 +15,9 @@ book-server_deps:
   - linux
   - quarkus
   withDeps: true
-  referencesDir: book-server_deps
-
----
+  
 book-server_source:
-  description: book-store basic source only analysis
+  description: book-store source only analysis
   application:
     name: book-server
     repository:
@@ -34,4 +32,3 @@ book-server_source:
   - linux
   - quarkus
   withDeps: false
-  referencesDir: book-server_source
