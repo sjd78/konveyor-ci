@@ -4,7 +4,7 @@ book-server_deps:
   application:
     name: book-server
     repository:
-      url: https://github.com/mguetta1/book-server
+      url: https://github.com/migtools/book-server
       kind: git
       branch: v0.0.1
   filename: book-server
@@ -22,7 +22,7 @@ book-server_source:
   application:
     name: book-server
     repository:
-      url: https://github.com/mguetta1/book-server
+      url: https://github.com/migtools/book-server
       kind: git
       branch: v0.0.1
   filename: book-server
