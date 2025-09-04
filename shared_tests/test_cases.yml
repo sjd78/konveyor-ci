@@ -6,7 +6,7 @@ book-server_deps:
     repository:
       url: https://github.com/migtools/book-server
       kind: git
-      tag: v0.0.1
+      branch: v0.0.1
   filename: book-server
   sources:
   - java-ee
@@ -24,7 +24,7 @@ book-server_source:
     repository:
       url: https://github.com/migtools/book-server
       kind: git
-      tag: v0.0.1
+      branch: v0.0.1
   filename: book-server
   sources:
   - java-ee
