@@ -33,19 +33,6 @@
           \ data storage: Use the file system of a running container as a brief, single-transaction\
           \ cache."
         uri: src/main/java/com/telran/application/model/BookModel.java
-      - codeSnip: 23              pw.println(mapper.writeValueAsString(Book.getRandomBook()));
-        lineNumber: 23
-        message: "An application running inside a container could lose access to a\
-          \ file in local storage.\n\n Recommendations\n\n The following recommendations\
-          \ depend on the function of the file in local storage:\n\n * Logging: Log\
-          \ to standard output and use a centralized log collector to analyze the\
-          \ logs.\n * Caching: Use a cache backing service.\n * Configuration: Store\
-          \ configuration settings in environment variables so that they can be updated\
-          \ without code changes.\n * Data storage: Use a database backing service\
-          \ for relational data or use a persistent data storage system.\n * Temporary\
-          \ data storage: Use the file system of a running container as a brief, single-transaction\
-          \ cache."
-        uri: src/main/java/com/telran/application/model/BookModel.java
       - codeSnip: 29          File file = new File(filename);
         lineNumber: 29
         message: "An application running inside a container could lose access to a\
@@ -61,19 +48,6 @@
         uri: src/main/java/com/telran/application/model/BookModel.java
       - codeSnip: 32          BufferedReader br = new BufferedReader(new FileReader(file));
         lineNumber: 32
-        message: "An application running inside a container could lose access to a\
-          \ file in local storage.\n\n Recommendations\n\n The following recommendations\
-          \ depend on the function of the file in local storage:\n\n * Logging: Log\
-          \ to standard output and use a centralized log collector to analyze the\
-          \ logs.\n * Caching: Use a cache backing service.\n * Configuration: Store\
-          \ configuration settings in environment variables so that they can be updated\
-          \ without code changes.\n * Data storage: Use a database backing service\
-          \ for relational data or use a persistent data storage system.\n * Temporary\
-          \ data storage: Use the file system of a running container as a brief, single-transaction\
-          \ cache."
-        uri: src/main/java/com/telran/application/model/BookModel.java
-      - codeSnip: 40              library.put(book.getISBN(), book);
-        lineNumber: 40
         message: "An application running inside a container could lose access to a\
           \ file in local storage.\n\n Recommendations\n\n The following recommendations\
           \ depend on the function of the file in local storage:\n\n * Logging: Log\
