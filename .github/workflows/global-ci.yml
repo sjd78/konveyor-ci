@@ -391,6 +391,7 @@ jobs:
           hub-image: "quay.io/konveyor/tackle2-hub:${{ inputs.tag }}"
           ui-image: "quay.io/konveyor/tackle2-ui:${{ inputs.tag }}"
           addon-analyzer-image: "quay.io/konveyor/tackle2-addon-analyzer:${{ inputs.tag }}"
+          java-provider-image: "quay.io/konveyor/java-external-provider:${{ inputs.tag }}"
           image-pull-policy: IfNotPresent
           analyzer-container-memory: 0
           analyzer-container-cpu: 0
@@ -402,6 +403,7 @@ jobs:
           hub-image: "quay.io/konveyor/tackle2-hub:${{ inputs.tag }}"
           ui-image: "quay.io/konveyor/tackle2-ui:${{ inputs.tag }}"
           addon-analyzer-image: "quay.io/konveyor/tackle2-addon-analyzer:${{ inputs.tag }}"
+          java-provider-image: "quay.io/konveyor/java-external-provider:${{ inputs.tag }}"
           image-pull-policy: IfNotPresent
           analyzer-container-memory: 0
           analyzer-container-cpu: 0
@@ -413,6 +415,7 @@ jobs:
           hub-image: "quay.io/konveyor/tackle2-hub:${{ inputs.tag }}"
           ui-image: "quay.io/konveyor/tackle2-ui:${{ inputs.tag }}"
           addon-analyzer-image: "quay.io/konveyor/tackle2-addon-analyzer:${{ inputs.tag }}"
+          java-provider-image: "quay.io/konveyor/java-external-provider:${{ inputs.tag }}"
           image-pull-policy: IfNotPresent
           analyzer-container-memory: 0
           analyzer-container-cpu: 0
