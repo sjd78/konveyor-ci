@@ -385,13 +385,12 @@ jobs:
             grep -- '---' /tmp/tests.log >> "$GITHUB_STEP_SUMMARY"
           fi || true
       - name: Upload analysis tests output
-        working-directory: go-konveyor-tests
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: analysis-tests-output
           include-hidden-files: true
-          path: analysis/tmp_output
+          path: go-konveyor-tests/analysis/tmp_output
 
   e2e-ui-integration-tests:
     needs: check-images
