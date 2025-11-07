@@ -355,6 +355,7 @@ jobs:
       # end DRY
 
       - uses: actions/setup-go@v4
+        working-directory: go-konveyor-tests
         with:
           go-version: 1.23
 
@@ -373,12 +374,14 @@ jobs:
           set -o pipefail; ${{ inputs.api_tests_tiers }} | tee /tmp/tests.log
         working-directory: go-konveyor-tests
       - name: Prepare summary
+        working-directory: go-konveyor-tests
         if: always()
         run: |
           if [[ -f /tmp/tests.log ]]; then
             grep -- '---' /tmp/tests.log >> "$GITHUB_STEP_SUMMARY"
           fi || true
       - name: Upload analysis tests output
+        working-directory: go-konveyor-tests
         if: always()
         uses: actions/upload-artifact@v4
         with:
