@@ -390,7 +390,7 @@ jobs:
         with:
           name: analysis-tests-output
           include-hidden-files: true
-          path: ${ github.workspace }/go-konveyor-tests/analysis/tmp_output
+          path: ${{ github.workspace }}/go-konveyor-tests/analysis/tmp_output
 
   e2e-ui-integration-tests:
     needs: check-images
