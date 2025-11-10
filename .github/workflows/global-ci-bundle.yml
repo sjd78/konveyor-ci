@@ -1,6 +1,10 @@
 name: Konveyor e2e CI via Operator Bundle shared workflow
 
 on:
+  pull_request:
+    types: [opened, reopened, edited]
+    paths:
+      - '.github/workflows/global-ci-bundle.yml'
   workflow_call:
     inputs:
       artifact:
@@ -354,9 +358,10 @@ jobs:
           tackle_cr: ${{ inputs.tackle_cr }}
       # end DRY
 
-      - uses: actions/setup-go@v4
+      - uses: actions/setup-go@v5
         with:
           go-version: 1.23
+          cache-dependency-path: "**/*.sum"
 
       - name: Install test dependencies
         run: |
@@ -373,6 +378,7 @@ jobs:
           set -o pipefail; ${{ inputs.api_tests_tiers }} | tee /tmp/tests.log
         working-directory: go-konveyor-tests
       - name: Prepare summary
+        working-directory: go-konveyor-tests
         if: always()
         run: |
           if [[ -f /tmp/tests.log ]]; then
@@ -384,7 +390,7 @@ jobs:
         with:
           name: analysis-tests-output
           include-hidden-files: true
-          path: analysis/tmp_output
+          path: ${{ github.workspace }}/go-konveyor-tests/analysis/tmp_output
 
   e2e-ui-integration-tests:
     needs: check-images
