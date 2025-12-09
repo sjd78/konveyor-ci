@@ -64,6 +64,8 @@ runs:
         working-directory: ./ui-tests
         project: ./cypress
         spec: "**/e2e/tests/login.test.ts"
+        summary-title: "Login tests"
+
 
     - name: Run UI tests
       uses: cypress-io/github-action@v6
@@ -78,6 +80,7 @@ runs:
         install: false
         working-directory: ./ui-tests
         project: ./cypress
+        summary-title: "UI tests (${{ inputs.ui_test_tags }})"
 
     - name: Upload cypress report data as artifact
       uses: actions/upload-artifact@v4
@@ -85,5 +88,5 @@ runs:
       with:
         name: test-reports-${{ env.UI_TESTS_REF }}
         path: |
-          ui-tests/cypress/runs
+          ./ui-tests/cypress/run
 
