@@ -226,7 +226,7 @@ env:
 
 jobs:
   check-images:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Check operator image exists
         if: ${{ inputs.operator_bundle != '' }}
@@ -273,7 +273,7 @@ jobs:
 
   e2e-api-integration-tests:
     needs: check-images
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     if: ${{ inputs.run_api_tests }}
     defaults:
       run:
@@ -395,7 +395,7 @@ jobs:
   e2e-ui-integration-tests:
     needs: check-images
     if: ${{ inputs.run_ui_tests }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
@@ -472,29 +472,15 @@ jobs:
             -n konveyor-tackle \
             ingress/tackle \
             --timeout=600s \
-            --for=jsonpath='{.status.loadBalancer.ingress[0].ip}'
+            --for=jsonpath='{.status.loadBalancer.ingress[0]}'
 
-          ingress_ip=$(kubectl get ingress/tackle -n konveyor-tackle -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-          echo "ingress is ready at: ${ingress_ip}"
-          echo "UI_URL=https://${ingress_ip}" >>$GITHUB_ENV
+          minikube_ip=$(minikube ip)
+          echo "ingress is ready at: ${minikube_ip}"
+          echo "UI_URL=https://${minikube_ip}" >>$GITHUB_ENV
       # end DRY
 
-      - name: Extract pull request number from inputs or PR description
-        shell: bash
-        env:
-          body: ${{ github.event.pull_request.body }}
-        run: |
-          PULL_REQUEST_NUMBER=$(echo ${body} | grep -oP '[U|u][I|i] [T|t]ests [P|p][R|r]: \K\d+' || true)
-          [ -z "$PULL_REQUEST_NUMBER" ] \
-            && UI_TESTS_REF=${{ inputs.ui_tests_ref }} \
-            || UI_TESTS_REF=refs/pull/$PULL_REQUEST_NUMBER/merge
-
-          echo "UI_TESTS_REF=${UI_TESTS_REF}" >>"$GITHUB_ENV"
-          echo "Using UI_TESTS_REF \`${UI_TESTS_REF}\`" >>"$GITHUB_STEP_SUMMARY"
-
       - name: Run UI tests
-        uses: konveyor/tackle2-ui/.github/actions/run-ui-tests@main
+        uses: ./.github/workflows/run-ui-tests.yaml
         with:
-          test_tags: ${{ inputs.ui_test_tags }}
-          tests_ref: ${{ env.UI_TESTS_REF }}
-          base_url: ${{ env.UI_URL }}
+          ui_tests_ref: ${{ inputs.ui_tests_ref }}
+          ui_test_tags: ${{ inputs.ui_test_tags }}

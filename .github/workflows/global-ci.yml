@@ -169,7 +169,7 @@ on:
 jobs:
   e2e-api-integration-tests:
     if: ${{ inputs.run_api_tests }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
@@ -199,6 +199,12 @@ jobs:
         if: "${{ inputs.component_name != '' }}"
         uses: docker/setup-buildx-action@v2
 
+      - name: start minikube
+        uses: konveyor/tackle2-operator/.github/actions/start-minikube@release-0.7
+        if: "${{ startsWith(inputs.operator_tag, 'v0.7') }}"
+        with:
+          memory: 'max'
+          cpus: 'max'
       - name: start minikube
         uses: konveyor/tackle2-operator/.github/actions/start-minikube@release-0.8
         if: "${{ startsWith(inputs.operator_tag, 'v0.8') }}"
@@ -233,6 +239,17 @@ jobs:
             docker load --input ${image}
           done
 
+      - name: install konveyor
+        uses: konveyor/tackle2-operator/.github/actions/install-tackle@release-0.7
+        if: "${{ startsWith(inputs.operator_tag, 'v0.7') }}"
+        with:
+          operator-bundle-image: "quay.io/konveyor/tackle2-operator-bundle:${{ inputs.operator_tag }}"
+          hub-image: "quay.io/konveyor/tackle2-hub:${{ inputs.tag }}"
+          ui-image: "quay.io/konveyor/tackle2-ui:${{ inputs.tag }}"
+          addon-analyzer-image: "quay.io/konveyor/tackle2-addon-analyzer:${{ inputs.tag }}"
+          image-pull-policy: IfNotPresent
+          analyzer-container-memory: 0
+          analyzer-container-cpu: 0
       - name: install konveyor
         uses: konveyor/tackle2-operator/.github/actions/install-tackle@release-0.8
         if: "${{ startsWith(inputs.operator_tag, 'v0.8') }}"
@@ -290,7 +307,7 @@ jobs:
 
   e2e-ui-integration-tests:
     if: ${{ inputs.run_ui_tests }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
@@ -308,6 +325,12 @@ jobs:
         if: "${{ inputs.component_name != '' }}"
         uses: docker/setup-buildx-action@v2
 
+      - name: start minikube
+        uses: konveyor/tackle2-operator/.github/actions/start-minikube@release-0.7
+        if: "${{ startsWith(inputs.operator_tag, 'v0.7') }}"
+        with:
+          memory: 'max'
+          cpus: 'max'
       - name: start minikube
         uses: konveyor/tackle2-operator/.github/actions/start-minikube@release-0.8
         if: "${{ startsWith(inputs.operator_tag, 'v0.8') }}"
@@ -343,6 +366,18 @@ jobs:
           done
 
       - name: install konveyor
+        uses: konveyor/tackle2-operator/.github/actions/install-tackle@release-0.7
+        if: "${{ startsWith(inputs.operator_tag, 'v0.7') }}"
+        with:
+          operator-bundle-image: "quay.io/konveyor/tackle2-operator-bundle:${{ inputs.operator_tag }}"
+          hub-image: "quay.io/konveyor/tackle2-hub:${{ inputs.tag }}"
+          ui-image: "quay.io/konveyor/tackle2-ui:${{ inputs.tag }}"
+          addon-analyzer-image: "quay.io/konveyor/tackle2-addon-analyzer:${{ inputs.tag }}"
+          java-provider-image: "quay.io/konveyor/java-external-provider:${{ inputs.tag }}"
+          image-pull-policy: IfNotPresent
+          analyzer-container-memory: 0
+          analyzer-container-cpu: 0
+      - name: install konveyor
         uses: konveyor/tackle2-operator/.github/actions/install-tackle@release-0.8
         if: "${{ startsWith(inputs.operator_tag, 'v0.8') }}"
         with:
@@ -373,29 +408,15 @@ jobs:
             -n konveyor-tackle \
             ingress/tackle \
             --timeout=600s \
-            --for=jsonpath='{.status.loadBalancer.ingress[0].ip}'
+            --for=jsonpath='{.status.loadBalancer.ingress[0]}'
 
-          ingress_ip=$(kubectl get ingress/tackle -n konveyor-tackle -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-          echo "ingress is ready at: ${ingress_ip}"
-          echo "UI_URL=https://${ingress_ip}" >>$GITHUB_ENV
+          minikube_ip=$(minikube ip)
+          echo "ingress is ready at: ${minikube_ip}"
+          echo "UI_URL=https://${minikube_ip}" >>$GITHUB_ENV
       # end DRY
 
-      - name: Extract pull request number from inputs or PR description
-        shell: bash
-        env:
-          body: ${{ github.event.pull_request.body }}
-        run: |
-          PULL_REQUEST_NUMBER=$(echo ${body} | grep -oP '[U|u][I|i] [T|t]ests [P|p][R|r]: \K\d+' || true)
-          [ -z "$PULL_REQUEST_NUMBER" ] \
-            && UI_TESTS_REF=${{ inputs.ui_tests_ref }} \
-            || UI_TESTS_REF=refs/pull/$PULL_REQUEST_NUMBER/merge
-
-          echo "UI_TESTS_REF=${UI_TESTS_REF}" >>"$GITHUB_ENV"
-          echo "Using UI_TESTS_REF \`${UI_TESTS_REF}\`" >>"$GITHUB_STEP_SUMMARY"
-
       - name: Run UI tests
-        uses: konveyor/tackle2-ui/.github/actions/run-ui-tests@main
+        uses: ./.github/workflows/run-ui-tests.yaml
         with:
-          test_tags: ${{ inputs.ui_test_tags }}
-          tests_ref: ${{ env.UI_TESTS_REF }}
-          base_url: ${{ env.UI_URL }}
+          ui_tests_ref: ${{ inputs.ui_tests_ref }}
+          ui_test_tags: ${{ inputs.ui_test_tags }}
