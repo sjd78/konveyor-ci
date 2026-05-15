@@ -1,0 +1,142 @@
+name: Report Deployed Images
+description: |
+  After a Konveyor install on minikube, inspects all running pod images via the
+  minikube Docker daemon and writes a Markdown report to GITHUB_STEP_SUMMARY.
+
+  For each image the report includes:
+    - Component name (container name from the pod spec)
+    - Full image reference and tag
+    - Short digest (sha256, first 12 chars)
+    - Git commit SHA from OCI label org.opencontainers.image.revision  (falls back to vcs-ref)
+    - Git branch / version from OCI label org.opencontainers.image.version (falls back to branch)
+    - Build date from OCI label org.opencontainers.image.created         (falls back to build-date)
+
+  The action uses only `docker inspect` against the minikube daemon — no extra pulls
+  are needed because minikube has already pulled every image during the install step.
+
+  Optionally also uses `skopeo inspect` to enrich images that have already been
+  garbage-collected from the daemon (e.g. init-containers, short-lived jobs).
+
+inputs:
+  namespace:
+    description: Kubernetes namespace where Konveyor is installed.
+    required: false
+    default: konveyor-tackle
+
+runs:
+  using: composite
+  steps:
+    - name: Report deployed images
+      shell: bash
+      env:
+        NAMESPACE: ${{ inputs.namespace }}
+      run: |
+        set -euo pipefail
+
+        # ── helpers ──────────────────────────────────────────────────────────
+
+        # Read a single OCI label from a locally loaded image.
+        # Tries the primary key first, then an optional fallback key.
+        docker_label() {
+          local image="$1" primary="$2" fallback="${3:-}"
+          local val
+          val=$(docker inspect --format="{{index .Config.Labels \"${primary}\"}}" \
+                  "${image}" 2>/dev/null || true)
+          if [[ -z "${val}" && -n "${fallback}" ]]; then
+            val=$(docker inspect --format="{{index .Config.Labels \"${fallback}\"}}" \
+                    "${image}" 2>/dev/null || true)
+          fi
+          echo "${val:-N/A}"
+        }
+
+        # Same but via skopeo (for images evicted from the local daemon).
+        skopeo_label() {
+          local image="$1" primary="$2" fallback="${3:-}"
+          local val
+          if command -v skopeo &>/dev/null; then
+            val=$(skopeo inspect "docker://${image}" 2>/dev/null \
+                  | python3 -c "import sys,json; d=json.load(sys.stdin); \
+                      print(d.get('Labels',{}).get('${primary}',''))" 2>/dev/null || true)
+            if [[ -z "${val}" && -n "${fallback}" ]]; then
+              val=$(skopeo inspect "docker://${image}" 2>/dev/null \
+                    | python3 -c "import sys,json; d=json.load(sys.stdin); \
+                        print(d.get('Labels',{}).get('${fallback}',''))" 2>/dev/null || true)
+            fi
+          fi
+          echo "${val:-N/A}"
+        }
+
+        # Resolve the image's short digest from the local daemon; fall back to
+        # the tag portion of the image reference if no digest is available.
+        short_digest() {
+          local image="$1"
+          local digest
+          digest=$(docker inspect --format='{{index .RepoDigests 0}}' \
+                     "${image}" 2>/dev/null | grep -oP 'sha256:\K.{12}' || true)
+          echo "${digest:-N/A}"
+        }
+
+        # ── banner ───────────────────────────────────────────────────────────
+
+        {
+          echo "## 🐳 Deployed Image Report"
+          echo ""
+          echo "Namespace: \`${NAMESPACE}\`"
+          echo ""
+          echo "| Component | Image | Tag | Digest | Git Commit | Version / Branch | Build Date |"
+          echo "|-----------|-------|-----|--------|------------|------------------|------------|"
+        } >> "$GITHUB_STEP_SUMMARY"
+
+        # ── point docker at minikube's daemon ────────────────────────────────
+        eval "$(minikube -p minikube docker-env)"
+
+        # ── collect all unique pod/container/image combos ────────────────────
+        # jsonpath produces lines: <container-name> <TAB> <image-ref>
+        kubectl get pods -n "${NAMESPACE}" \
+          -o jsonpath='{range .items[*]}{range .spec.containers[*]}{.name}{"\t"}{.image}{"\n"}{end}{end}' \
+          2>/dev/null \
+        | sort -u \
+        | while IFS=$'\t' read -r container image; do
+            [[ -z "${image}" ]] && continue
+
+            # Split tag from the image ref (handles both :tag and @sha256:... refs)
+            tag=$(echo "${image}" | grep -oP '(?<=:)[^@]+$' || echo "latest")
+            image_base=$(echo "${image}" | sed 's/:[^:@]*$//' | sed 's/@.*//')
+
+            # Try local daemon first; fall back to skopeo for evicted images
+            if docker inspect "${image}" &>/dev/null 2>&1; then
+              digest=$(short_digest "${image}")
+              git_sha=$(docker_label  "${image}" \
+                          "org.opencontainers.image.revision" "vcs-ref")
+              version=$(docker_label  "${image}" \
+                          "org.opencontainers.image.version"  "branch")
+              build_date=$(docker_label "${image}" \
+                             "org.opencontainers.image.created" "build-date")
+            else
+              digest="N/A"
+              git_sha=$(skopeo_label  "${image}" \
+                          "org.opencontainers.image.revision" "vcs-ref")
+              version=$(skopeo_label  "${image}" \
+                          "org.opencontainers.image.version"  "branch")
+              build_date=$(skopeo_label "${image}" \
+                             "org.opencontainers.image.created" "build-date")
+            fi
+
+            # Truncate git SHA to 12 chars for readability
+            short_sha="${git_sha:0:12}"
+            [[ "${short_sha}" == "N/A" || -z "${short_sha}" ]] && short_sha="N/A"
+
+            # Flag :latest tags so they stand out in the summary
+            tag_display="${tag}"
+            [[ "${tag}" == "latest" ]] && tag_display="⚠️ \`latest\`" || tag_display="\`${tag}\`"
+
+            echo "| \`${container}\` | \`${image_base}\` | ${tag_display} | \`${digest}\` | \`${short_sha}\` | \`${version}\` | ${build_date} |" \
+              >> "$GITHUB_STEP_SUMMARY"
+          done
+
+        # ── footer ───────────────────────────────────────────────────────────
+        {
+          echo ""
+          echo "> _Generated at $(date -u '+%Y-%m-%dT%H:%M:%SZ') by \
+        [report-deployed-images](https://github.com/konveyor/ci/tree/main/.github/actions/report-deployed-images)_"
+        } >> "$GITHUB_STEP_SUMMARY"
